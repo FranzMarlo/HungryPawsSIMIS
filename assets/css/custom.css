@@ -1,0 +1,67 @@
+/* Add here all your CSS customizations */
+.bg-pink {
+  background-color: #d84e82 !important;
+}
+
+.bg-blue {
+  background-color: #0b6eca !important;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.invoice-logo {
+  height: 80px;
+}
+
+.low-stock {
+  background-color: #d2322d;
+  border-radius: 20px;
+  max-width: 80px;
+  color: #fff;
+}
+
+.stable-stock {
+  background-color: #47a447;
+  border-radius: 20px;
+  max-width: 80px;
+  color: #fff;
+}
+
+.warning-stock {
+  background-color: #ed9c28;
+  border-radius: 20px;
+  max-width: 80px;
+  color: #fff;
+}
+
+.table td.text-center {
+  text-align: center !important;
+}
+
+.badge {
+  display: inline-block;
+  width: 110px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.error-explanation {
+    font-size: 18px;
+    color: #555;
+    margin-top: 10px;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+.error-code {
+    margin-bottom: 5px;
+}
+
+.landing-logo {
+  height: 4rem;
+  width: 6rem;
+}

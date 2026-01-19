@@ -1,0 +1,38 @@
+Admin:
+
+Login Url: http://localhost/hungrypaws/admin/login
+Credentials:
+
+Username: johndoe
+Password: 111111
+
+
+Cashier:
+
+Login Url: http://localhost/hungrypaws/cashier/login
+Credentials:
+
+Username: cashier1
+Password: 111111
+
+Manager:
+
+Login Url: http://localhost/hungrypaws/manager/login
+Credentials:
+
+Username: manager1
+Password: 111111
+
+Inventory Staff:
+
+Login Url: http://localhost/hungrypaws/staff/login
+Credentials:
+
+Username: staff1
+Password: 111111
+
+
+Notes:
+1. Download and install xampp from link: https://www.apachefriends.org/download.html (if not yet installed)
+2. Extract the HungryPaws folder from zip file to htdocs folder of xampp.
+3. Kindly import the hungrypaws.sql to your phpMyAdmin then open one of the login url to access the website.

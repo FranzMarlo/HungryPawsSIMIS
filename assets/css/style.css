@@ -1,0 +1,79 @@
+body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #2b74c7, #ff6fa8);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 140px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            margin-bottom: 40px;
+            opacity: 0.85;
+        }
+
+        .roles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(12px);
+            padding: 25px 15px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .role-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .role-card i {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .role-card h3 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        footer {
+            margin-top: 35px;
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }

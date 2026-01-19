@@ -1,0 +1,106 @@
+(function ($) {
+  let activeNotices = {};
+
+  // 🔄 Optional auto-reset logic:
+  // Uncomment the next line to always clear dismissed notices on page load.
+  // localStorage.removeItem("dismissedNotices");
+
+  // ✅ OR automatically reset once per day
+  const todayKey = new Date().toISOString().split("T")[0];
+  const lastReset = localStorage.getItem("lastResetDate");
+
+  if (lastReset !== todayKey) {
+    localStorage.removeItem("dismissedNotices");
+    localStorage.setItem("lastResetDate", todayKey);
+    console.log("🔁 Dismissed notices reset for a new day.");
+  }
+
+  let dismissedNotices = JSON.parse(
+    localStorage.getItem("dismissedNotices") || "[]"
+  );
+
+  function saveDismissed(productName) {
+    if (!dismissedNotices.includes(productName)) {
+      dismissedNotices.push(productName);
+      localStorage.setItem(
+        "dismissedNotices",
+        JSON.stringify(dismissedNotices)
+      );
+    }
+  }
+
+  function checkLowStock() {
+    fetch("/HungryPaws/backend/staff/get-low-stock.php")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success" && data.data.length > 0) {
+          const lowStockItems = data.data.filter(
+            (item) => !dismissedNotices.includes(item.product_name)
+          );
+
+          Object.keys(activeNotices).forEach((key) => {
+            if (!lowStockItems.find((item) => item.product_name === key)) {
+              activeNotices[key].remove();
+              delete activeNotices[key];
+            }
+          });
+
+          if (lowStockItems.length > 3) {
+            if (!activeNotices["_summary_"]) {
+              const summaryNotice = new PNotify({
+                title: "Multiple Low Stock Alerts",
+                text: `There are ${lowStockItems.length} products low on stock. <a href="products" style="color:#fff; text-decoration:underline;">View all</a>`,
+                type: "warning",
+                addclass: "click-2-close icon-nb",
+                icon: "fas fa-boxes-stacked",
+                hide: false,
+                buttons: { closer: false, sticker: false },
+              });
+
+              summaryNotice.get().click(() => {
+                summaryNotice.remove();
+                saveDismissed("_summary_");
+                delete activeNotices["_summary_"];
+              });
+
+              activeNotices["_summary_"] = summaryNotice;
+            }
+          } else {
+            lowStockItems.forEach((item) => {
+              if (!activeNotices[item.product_name]) {
+                const notice = new PNotify({
+                  title: "Low Stock Alert",
+                  text: `${item.product_name} only has ${item.stock_level} stocks left (reorder at ${item.reorder_point}).`,
+                  type: "warning",
+                  addclass: "click-2-close icon-nb",
+                  icon: "fas fa-arrow-trend-down",
+                  hide: false,
+                  buttons: { closer: false, sticker: false },
+                });
+
+                notice.get().click(() => {
+                  notice.remove();
+                  saveDismissed(item.product_name);
+                  delete activeNotices[item.product_name];
+                });
+
+                activeNotices[item.product_name] = notice;
+              }
+            });
+
+            if (activeNotices["_summary_"]) {
+              activeNotices["_summary_"].remove();
+              delete activeNotices["_summary_"];
+            }
+          }
+        } else {
+          Object.values(activeNotices).forEach((notice) => notice.remove());
+          activeNotices = {};
+        }
+      })
+      .catch((error) => console.error("Error fetching low stock:", error));
+  }
+
+  setInterval(checkLowStock, 60000);
+  checkLowStock();
+})(jQuery);
