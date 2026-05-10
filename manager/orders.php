@@ -7,7 +7,7 @@ $title = "Orders | Hungry Paws";
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 
 $fetch = new fetchClass();
-$orders = $fetch->getCashierOrders($branch_id);
+$orders = $fetch->getGlobalOrders();
 ?>
 
 <body>
@@ -53,7 +53,7 @@ $orders = $fetch->getCashierOrders($branch_id);
                                                         <option value="0">Order ID</option>
                                                         <option value="1">Total Amount (₱)</option>
                                                         <option value="2">Order Date</option>
-                                                        <option value="3">Cashier</option>
+                                                        <option value="3">Branch</option>
                                                         <option value="4">Payment Method</option>
                                                         <option value="5">Availed Service</option>
                                                     </select>
@@ -93,7 +93,7 @@ $orders = $fetch->getCashierOrders($branch_id);
                                                 <th>Order ID</th>
                                                 <th>Total Amount (₱)</th>
                                                 <th>Order Date</th>
-                                                <th>Cashier</th>
+                                                <th>Branch</th>
                                                 <th>Payment Method</th>
                                                 <th>Availed Service</th>
                                                 <th>Actions</th>
@@ -108,7 +108,7 @@ $orders = $fetch->getCashierOrders($branch_id);
                                                         <td><strong><?= htmlspecialchars($order['total_amount']) ?></strong>
                                                         </td>
                                                         <td><?= htmlspecialchars($order['order_date']) ?></td>
-                                                        <td><?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?>
+                                                        <td><?= htmlspecialchars($order['branch_name']) ?>
                                                         </td>
                                                         <td><?= htmlspecialchars($order['payment_method']) ?></td>
                                                         <td><span

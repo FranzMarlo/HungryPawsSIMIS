@@ -7,6 +7,7 @@ $title = "Add Inventory | Hungry Paws";
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 $fetch = new fetchClass();
 $products = $fetch->staffGetProducts();
+$branches = $fetch->getBranches();
 ?>
 
 <body>
@@ -51,12 +52,34 @@ $products = $fetch->staffGetProducts();
                                                         <?php if (!empty($products)): ?>
                                                             <option value="" selected disabled>Select Product</option>
                                                             <?php foreach ($products as $product): ?>
-                                                                <option value="<?= htmlspecialchars($product['product_id']) ?>">
+                                                                <option value="<?= htmlspecialchars($product['product_id']) ?>"
+                                                                    data-perish="<?= htmlspecialchars($product['is_perishable']) ?>">
                                                                     <?= htmlspecialchars($product['product_name']) ?>
                                                                 </option>
                                                             <?php endforeach; ?>
                                                         <?php else: ?>
                                                             <option value="" selected disabled>No Product Found</option>
+                                                        <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center pb-3">
+                                                <label
+                                                    class="col-lg-5 col-xl-3 control-label text-lg-end pt-2 mt-1 mb-0">Select
+                                                    Branch</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <select data-plugin-selectTwo
+                                                        class="form-control form-control-modern populate"
+                                                        id="inventoryBranch" name="inventoryBranch">
+                                                        <?php if (!empty($branches)): ?>
+                                                            <option value="" selected disabled>Select Branch</option>
+                                                            <?php foreach ($branches as $branch): ?>
+                                                                <option value="<?= htmlspecialchars($branch['branch_id']) ?>">
+                                                                    <?= htmlspecialchars($branch['branch_name']) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        <?php else: ?>
+                                                            <option value="" selected disabled>No Branch Found</option>
                                                         <?php endif; ?>
                                                     </select>
                                                 </div>
@@ -80,8 +103,23 @@ $products = $fetch->staffGetProducts();
                                                 </div>
                                             </div>
                                             <div class="form-group row align-items-center pb-3">
-                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Set
-                                                    Product Expiry Date</label>
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">
+                                                    Manufactured Date</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                        </span>
+                                                        <input type="text" data-plugin-datepicker
+                                                            name="manufacturedDate" id="manufacturedDate"
+                                                            class="form-control form-control-modern"
+                                                            placeholder="Set Manufactured Date">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center pb-3">
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Expiry
+                                                    Date</label>
                                                 <div class="col-lg-7 col-xl-6">
                                                     <div class="input-group">
                                                         <span class="input-group-text">
@@ -89,10 +127,11 @@ $products = $fetch->staffGetProducts();
                                                         </span>
                                                         <input type="text" data-plugin-datepicker name="expiryDate"
                                                             id="expiryDate" class="form-control form-control-modern"
-                                                            placeholder="Set Expiry Date">
+                                                            placeholder="Set Expiry Date" disabled>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <input type="hidden" name="isPerish" id="isPerish">
                                         </div>
                                     </div>
                                 </div>
@@ -113,7 +152,6 @@ $products = $fetch->staffGetProducts();
                             </a>
                         </div>
                     </div>
-                    <input type="hidden" name="inventoryBranch" value="<?= htmlspecialchars($branch_id) ?>">
                 </form>
                 <!-- end: page -->
             </section>

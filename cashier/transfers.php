@@ -2,12 +2,12 @@
 <html class="modern fixed has-top-menu has-left-sidebar-half">
 
 <?php
-$title = "Orders | Hungry Paws";
+$title = "Stock Requests | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/cashier-head.php';
 
 $fetch = new fetchClass();
-$orders = $fetch->getCashierOrders($branch_id);
+$requests = $fetch->getBranchStockTransfer($branch_id);
 ?>
 
 <body>
@@ -24,7 +24,7 @@ $orders = $fetch->getCashierOrders($branch_id);
 
             <section role="main" class="content-body content-body-modern mt-0">
                 <header class="page-header page-header-left-inline-breadcrumb">
-                    <h2 class="font-weight-bold text-6">Orders</h2>
+                    <h2 class="font-weight-bold text-6">Incoming Stock Transfers</h2>
                 </header>
 
 
@@ -42,19 +42,19 @@ $orders = $fetch->getCashierOrders($branch_id);
                                                     class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">+
                                                     Add Order</a>
                                             </div>
-
                                             <div class="col-8 col-lg-auto ms-auto ml-auto mb-3 mb-lg-0">
                                                 <div class="d-flex align-items-lg-center flex-column flex-lg-row">
                                                     <label class="ws-nowrap me-3 mb-0">Filter By:</label>
                                                     <select class="form-control select-style-1 filter-by"
                                                         name="filter-by">
                                                         <option value="all" selected>All</option>
-                                                        <option value="0">Order ID</option>
-                                                        <option value="1">Total Amount (₱)</option>
-                                                        <option value="2">Order Date</option>
-                                                        <option value="3">Cashier</option>
-                                                        <option value="4">Payment Method</option>
-                                                        <option value="5">Availed Service</option>
+                                                        <option value="0">Request ID</option>
+                                                        <option value="1">Product Name</option>
+                                                        <option value="2">Quantity</option>
+                                                        <option value="3">Sending Branch</option>
+                                                        <option value="4">Receiving Branch</option>
+                                                        <option value="5">Transfer Date</option>
+                                                        <option value="6">Status</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -75,7 +75,7 @@ $orders = $fetch->getCashierOrders($branch_id);
                                                     <div class="input-group">
                                                         <input type="text" class="search-term form-control"
                                                             name="search-term" id="search-term"
-                                                            placeholder="Search Order">
+                                                            placeholder="Search Request">
                                                         <button class="btn btn-default" type="submit"><i
                                                                 class="bx bx-search"></i></button>
                                                     </div>
@@ -84,49 +84,49 @@ $orders = $fetch->getCashierOrders($branch_id);
                                         </div>
                                     </div>
 
-                                    <table class="table table-ecommerce-simple table-borderless table-striped mb-0"
-                                        id="datatable-order-list" style="min-width: 640px;">
+                                    <table class="table table-ecommerce-simple table-striped mb-0"
+                                        id="datatable-product-list" style="min-width: 750px;">
 
                                         <thead>
                                             <tr>
-                                                <th>Order ID</th>
-                                                <th>Total Amount (₱)</th>
-                                                <th>Order Date</th>
-                                                <th>Cashier</th>
-                                                <th>Payment Method</th>
-                                                <th>Availed Service</th>
+                                                <th>Request ID</th>
+                                                <th>Requested Product</th>
+                                                <th>Quantity</th>
+                                                <th>Sending Branch</th>
+                                                <th>Receiving Branch</th>
+                                                <th>Transfer Date</th>
+                                                <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (!empty($orders)): ?>
-                                                <?php foreach ($orders as $order): ?>
+                                            <?php if (!empty($requests)): ?>
+                                                <?php foreach ($requests as $request): ?>
                                                     <tr>
-                                                        <td><strong><?= htmlspecialchars($order['order_id']) ?></strong>
+                                                        <td><strong><?= htmlspecialchars($request['transfer_id']) ?></strong></a>
                                                         </td>
-                                                        <td><strong><?= htmlspecialchars($order['total_amount']) ?></strong>
+                                                        <td><strong><?= htmlspecialchars($request['product_name']) ?></strong></a>
                                                         </td>
-                                                        <td><?= htmlspecialchars($order['order_date']) ?></td>
-                                                        <td><?= htmlspecialchars($order['first_name'] . ' ' . $order['last_name']) ?>
+                                                        <td class="text-center"><?= htmlspecialchars($request['quantity']) ?>
                                                         </td>
-                                                        <td><?= htmlspecialchars($order['payment_method']) ?></td>
+                                                        <td><?= htmlspecialchars($request['sending_branch']) ?></td>
+                                                        <td><?= htmlspecialchars($request['receiving_branch']) ?>
+                                                        </td>
+                                                        <td width="15%"><?= htmlspecialchars($request['transfer_date']) ?></td>
                                                         <td><span
-                                                                class="<?= getServiceClass($order['is_service']) ?>"><?= getServiceText($order['is_service']) ?>
+                                                                class="<?= getRequestStatusClass($request['status']) ?>"><?= htmlspecialchars($request['status']) ?>
                                                             </span></td>
                                                         <td>
-                                                            <a href="receipt?id=<?= urlencode($order['order_id']) ?>"
+                                                            <a href="update-request?id=<?= urlencode($request['transfer_id']) ?>"
                                                                 class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
-                                                                    class="fa-solid fa-eye"></i></a>
-                                                            <a href="print-receipt?id=<?= urlencode($order['order_id']) ?>"
-                                                                target="_blank" class="mb-1 mt-1 me-1 btn btn-xs btn-primary"><i
-                                                                    class="fa-solid fa-print"></i></a>
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="7" class="text-center">
-                                                        No orders found in branch
+                                                    <td colspan="8" class="text-center">
+                                                        No incoming stock
                                                     </td>
                                                 </tr>
                                             <?php endif; ?>
@@ -165,11 +165,12 @@ $orders = $fetch->getCashierOrders($branch_id);
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
 
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
+
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/theme.php';
     ?>
-
-    <script src="/HungryPaws/assets/js/order/datatable-order.js"></script>
 
     <!-- Examples -->
     <script src="/HungryPaws/assets/js/examples/examples.header.menu.js"></script>

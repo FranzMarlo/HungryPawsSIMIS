@@ -96,3 +96,21 @@ function getArchivedText(int $is_archived)
         return 'Archived';
     }
 }
+
+function getPerishableClass(int $is_perishable)
+{
+    if ($is_perishable == 0) {
+        return 'ecommerce-status completed';
+    } else {
+        return 'ecommerce-status cancelled';
+    }
+}
+
+function getPerishableText(int $is_perishable)
+{
+    if ($is_perishable == 0) {
+        return 'No';
+    } else {
+        return 'Yes';
+    }
+}

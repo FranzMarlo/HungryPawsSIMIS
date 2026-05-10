@@ -16,7 +16,7 @@
   }
 
   let dismissedNotices = JSON.parse(
-    localStorage.getItem("dismissedNotices") || "[]"
+    localStorage.getItem("dismissedNotices") || "[]",
   );
 
   function saveDismissed(productName) {
@@ -24,7 +24,7 @@
       dismissedNotices.push(productName);
       localStorage.setItem(
         "dismissedNotices",
-        JSON.stringify(dismissedNotices)
+        JSON.stringify(dismissedNotices),
       );
     }
   }
@@ -35,7 +35,7 @@
       .then((data) => {
         if (data.status === "success" && data.data.length > 0) {
           const lowStockItems = data.data.filter(
-            (item) => !dismissedNotices.includes(item.product_name)
+            (item) => !dismissedNotices.includes(item.product_name),
           );
 
           Object.keys(activeNotices).forEach((key) => {
@@ -49,7 +49,7 @@
             if (!activeNotices["_summary_"]) {
               const summaryNotice = new PNotify({
                 title: "Multiple Low Stock Alerts",
-                text: `There are ${lowStockItems.length} products low on stock. <a href="products" style="color:#fff; text-decoration:underline;">View all</a>`,
+                text: `There are ${lowStockItems.length} products low on stock on branches. <a href="products" style="color:#fff; text-decoration:underline;">View all</a>`,
                 type: "warning",
                 addclass: "click-2-close icon-nb",
                 icon: "fas fa-boxes-stacked",
@@ -70,7 +70,7 @@
               if (!activeNotices[item.product_name]) {
                 const notice = new PNotify({
                   title: "Low Stock Alert",
-                  text: `${item.product_name} only has ${item.stock_level} stocks left (reorder at ${item.reorder_point}).`,
+                  text: `${item.branch_name} has ${item.total_stock} stocks left of ${item.product_name} (reorder at ${item.reorder_point}).`,
                   type: "warning",
                   addclass: "click-2-close icon-nb",
                   icon: "fas fa-arrow-trend-down",

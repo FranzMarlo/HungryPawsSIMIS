@@ -68,14 +68,14 @@ document
         });
         showSuccess(
           "Report Generated",
-          "Inventory report successfully loaded."
+          "Inventory report successfully loaded.",
         );
       }
     } catch (error) {
       console.error("Fetch Error:", error);
       showError(
         "Server Error",
-        "Unable to load report. Please try again later."
+        "Unable to load report. Please try again later.",
       );
     }
   });
@@ -89,10 +89,10 @@ document
     const endDate = document.getElementById("endDate").value;
     const branchId = document.getElementById("branchId").value;
 
-    if (!branchId || !startDate || !endDate) {
+    if (!startDate || !endDate) {
       showWarning(
         "Missing Fields",
-        "Please select a branch, and date range before printing the report."
+        "Please select a branch, and date range before printing the report.",
       );
       return;
     }

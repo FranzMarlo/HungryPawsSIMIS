@@ -121,6 +121,61 @@ class helperFunctions extends db_connect
         return $query->get_result()->fetch_assoc();
     }
 
+    public function sumProductStock($product_id, $branch_id)
+    {
+        $query = $this->conn->prepare(
+            "SELECT 
+            SUM(i.stock_level) AS total_stock
+        FROM inventory AS i
+        WHERE 
+            i.product_id = ?
+        AND
+            i.branch_id = ?"
+        );
+
+        $query->bind_param('ss', $product_id, $branch_id);
+        $query->execute();
+        return $query->get_result()->fetch_assoc();
+    }
+
+    public function getInventoryBatchesForTransfer($product_id, $branch_id)
+    {
+        $query = $this->conn->prepare("
+        SELECT
+            inventory_id,
+            stock_level,
+            expiry_date,
+            manufactured_date
+        FROM inventory
+        WHERE
+            product_id = ?
+            AND branch_id = ?
+            AND stock_level > 0
+        ORDER BY
+            expiry_date ASC,
+            manufactured_date ASC
+    ");
+
+        $query->bind_param('ss', $product_id, $branch_id);
+        $query->execute();
+
+        return $query->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getTransferInfo($transfer_id)
+    {
+        $query = $this->conn->prepare("
+        SELECT *
+        FROM stock_transfer
+        WHERE transfer_id = ?
+    ");
+
+        $query->bind_param('s', $transfer_id);
+        $query->execute();
+
+        return $query->get_result()->fetch_assoc();
+    }
+
     public function generateUniqueRequestId()
     {
         $count = 0;
@@ -140,7 +195,7 @@ class helperFunctions extends db_connect
         return $barcode;
     }
 
-    public function checkProductInventory($product_id, $branch_id)
+    public function checkProductInventory($product_id, $branch_id, $expiryDate)
     {
         $query = $this->conn->prepare(
             "SELECT 
@@ -149,10 +204,32 @@ class helperFunctions extends db_connect
                 WHERE
                 product_id = ?
                 AND
-                branch_id = ?;
+                branch_id = ?
+                AND
+                expiry_date = ?;
                 "
         );
-        $query->bind_param('ss', $product_id, $branch_id);
+        $query->bind_param('sss', $product_id, $branch_id, $expiryDate);
+        $query->execute();
+        $result = $query->get_result()->fetch_assoc();
+        return $result['count'];
+    }
+
+    public function checkManufacturedInventory($product_id, $branch_id, $manufacturedDate)
+    {
+        $query = $this->conn->prepare(
+            "SELECT 
+                    COUNT(inventory_id) as count
+                FROM inventory
+                WHERE
+                product_id = ?
+                AND
+                branch_id = ?
+                AND
+                manufactured_date = ?;
+                "
+        );
+        $query->bind_param('sss', $product_id, $branch_id, $manufacturedDate);
         $query->execute();
         $result = $query->get_result()->fetch_assoc();
         return $result['count'];
@@ -185,6 +262,7 @@ class helperFunctions extends db_connect
                     i.stock_level,
                     i.reorder_point,
                     i.expiry_date,
+                    i.manufactured_date,
                     p.archived
                     FROM inventory AS i
                     INNER JOIN product p
@@ -206,6 +284,7 @@ class helperFunctions extends db_connect
                     p.category,
                     t.quantity,
                     t.sending_branch_id,
+                    t.receiving_branch_id,
                     t.transfer_date,
                     t.status,
                     i.stock_level,
@@ -228,6 +307,33 @@ class helperFunctions extends db_connect
         $query->bind_param('s', $transfer_id);
         $query->execute();
         return $query->get_result()->fetch_assoc();
+    }
+
+    public function getTransferItems($transfer_id)
+    {
+        $query = $this->conn->prepare("
+        SELECT 
+            sti.inventory_id,
+            sti.quantity,
+
+            i.product_id,
+            i.manufactured_date,
+            i.expiry_date,
+            i.reorder_point
+
+        FROM stock_transfer_items sti
+
+        INNER JOIN inventory i
+            ON sti.inventory_id = i.inventory_id
+
+        WHERE sti.transfer_id = ?
+    ");
+
+        $query->bind_param('s', $transfer_id);
+
+        $query->execute();
+
+        return $query->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getCurrentPassword($user_id)

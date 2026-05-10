@@ -6,7 +6,7 @@ $title = "Sales Report | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 $fetch = new fetchClass();
-$branch = $fetch->getBranchDetails($branch_id) ?>
+$branches = $fetch->getBranches(); ?>
 
 <body>
     <section class="body">
@@ -34,21 +34,11 @@ $branch = $fetch->getBranchDetails($branch_id) ?>
                                 <div class="row">
                                     <div class="col-sm-6 mt-3">
                                         <h2 class="h2 mt-0 mb-1 text-dark font-weight-bold">Sales Report</h2>
-                                        <h4 class="h5 m-0 text-dark font-weight-bold">
-                                            <?= htmlspecialchars($branch['branch_name']) ?>
-                                        </h4>
                                     </div>
                                     <div class="col-sm-6 text-end mt-3 mb-3 d-flex flex-column align-items-end">
                                         <div class="mb-2">
                                             <img src="/HungryPaws/assets/img/hungrypaws.png" alt="Hungry Paws"
                                                 class="invoice-logo" />
-                                        </div>
-                                        <div>
-                                            <address class="text-end">
-                                                <?= htmlspecialchars($branch['branch_name']) ?><br />
-                                                <?= htmlspecialchars($branch['address']) ?><br />
-                                                <?= htmlspecialchars($branch['contact_number']) ?>
-                                            </address>
                                         </div>
                                     </div>
 
@@ -81,8 +71,22 @@ $branch = $fetch->getBranchDetails($branch_id) ?>
                                         </div>
                                     </div>
 
-                                    <input type="hidden" name="branchId" id="branchId"
-                                        value="<?= htmlspecialchars($branch_id) ?>">
+                                    <div class="col-12 col-lg-3">
+                                        <label for="endDate" class="form-label">Select Branch</label>
+                                        <select data-plugin-selectTwo class="form-control form-control-modern populate"
+                                            id="branchId" name="branchId">
+                                            <?php if (!empty($branches)): ?>
+                                                <option value="" selected>All Branches</option>
+                                                <?php foreach ($branches as $branch): ?>
+                                                    <option value="<?= htmlspecialchars($branch['branch_id']) ?>">
+                                                        <?= htmlspecialchars($branch['branch_name']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <option value="" selected disabled>No Branch Found</option>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
 
                                     <div class="col-12 col-lg-3"> <button type="submit"
                                             class="btn btn-success px-4 text-3">
@@ -136,7 +140,8 @@ $branch = $fetch->getBranchDetails($branch_id) ?>
                                             <h2 class="card-title">Order Processed By Payment Method</h2>
                                         </header>
                                         <div class="card-body">
-                                            <div class="d-flex justify-content-center chart chart-md" id="paymentMethod">
+                                            <div class="d-flex justify-content-center chart chart-md"
+                                                id="paymentMethod">
                                                 <div id="paymentMethodPlaceholder"
                                                     style="text-align:center; padding:40px; color:#6c757d;">
                                                     Please Set Filter First

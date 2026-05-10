@@ -6,8 +6,6 @@ $title = "Request Stock | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 $fetch = new fetchClass();
-$branch = $fetch->getBranchDetails($branch_id);
-$products = $fetch->getStaffProducts($branch_id);
 $branchList = $fetch->getBranches();
 ?>
 
@@ -41,46 +39,53 @@ $branchList = $fetch->getBranches();
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="form-group col mb-3">
-                                            <label for="productSelect">Select
-                                                Product</label>
+                                            <label for="branchSelect">Select
+                                                Sending Branch</label>
                                             <select data-plugin-selectTwo
-                                                class="form-control form-control-modern populate" id="productSelect"
-                                                name="productSelect">
-                                                <?php if (!empty($products)): ?>
-                                                    <option value="" disabled selected>Select Product</option>
-                                                    <?php foreach ($products as $product): ?>
-                                                        <option value="<?= htmlspecialchars($product['product_id']) ?>"
-                                                            data-id="<?= htmlspecialchars($product['product_id']) ?>"
-                                                            data-stock="<?= htmlspecialchars($product['stock_level']) ?>"
-                                                            data-category="<?= htmlspecialchars($product['category']) ?>"
-                                                            data-name="<?= htmlspecialchars($product['product_name']) ?>"
-                                                            data-supplier="<?= htmlspecialchars($product['supplier_name']) ?>">
-                                                            <?= htmlspecialchars($product['product_name']) ?>
+                                                class="form-control form-control-modern populate" id="branchSelect"
+                                                name="branchSelect">
+                                                <?php if (!empty($branchList)): ?>
+                                                    <option value="" disabled selected>Select Branch</option>
+                                                    <?php foreach ($branchList as $item): ?>
+                                                        <option value="<?= htmlspecialchars($item['branch_id']) ?>"
+                                                            data-address="<?= htmlspecialchars($item['address']) ?>"
+                                                            data-contact="<?= htmlspecialchars($item['contact_number']) ?>">
+                                                            <?= htmlspecialchars($item['branch_name']) ?>
                                                         </option>
-                                                        </tr>
                                                     <?php endforeach; ?>
                                                 <?php else: ?>
-                                                    <option value="" disabled selected>No Products Available</option>
+                                                    <option value="" disabled selected>No Branches Found</option>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col mb-3">
+                                            <label for="productSelect">Select
+                                                Product</label>
+                                            <select data-plugin-selectTwo
+                                                class="form-control form-control-modern populate" id="productSelect"
+                                                name="productSelect">
+                                                <option value="" disabled selected>No Products Available
+                                                <option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col mb-3">
                                             <label for="quantity">Quantity</label>
-                                            <input type="number" min="0"
-                                                class="form-control form-control-modern" name="quantity" id="quantity"
-                                                placeholder="Enter Quantity" />
+                                            <input type="number" min="0" class="form-control form-control-modern"
+                                                name="quantity" id="quantity" placeholder="Enter Quantity" />
                                         </div>
                                     </div>
 
                                     <div class="form-row">
                                         <div class="form-group col mb-3">
                                             <label for="branchSelect">Select
-                                                Sending Branch</label>
+                                                Receiving Branch</label>
                                             <select data-plugin-selectTwo
-                                                class="form-control form-control-modern populate" id="branchSelect"
-                                                name="branchSelect">
+                                                class="form-control form-control-modern populate" id="branch1Select"
+                                                name="branch1Select">
                                                 <?php if (!empty($branchList)): ?>
                                                     <option value="" disabled selected>Select Branch</option>
                                                     <?php foreach ($branchList as $item): ?>
@@ -110,6 +115,14 @@ $branchList = $fetch->getBranches();
                                     <div class="row">
                                         <div class="col-xl-auto me-xl-5 pe-xl-5 mb-4 mb-xl-0">
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
+                                                SENDING BRANCH</h3>
+                                            <ul class="list list-unstyled list-item-bottom-space-0">
+                                                <li><strong id="sendingBranchName">No Branch Selected</strong>
+                                                </li>
+                                                <li id="sendingBranchAddress"><br></li>
+                                                <li id="sendingBranchContact"><br></li>
+                                            </ul>
+                                            <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
                                                 PRODUCT DETAILS</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
                                                 <li><strong id="productName">No Product Selected</strong>
@@ -135,13 +148,14 @@ $branchList = $fetch->getBranches();
                                                     <span id="quantityRequest">N/A</span>
                                                 </li>
                                             </ul>
+
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
-                                                SENDING BRANCH</h3>
+                                                RECEIVING BRANCH</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
-                                                <li><strong id="sendingBranchName">No Branch Selected</strong>
+                                                <li><strong id="receivingBranchName">No Branch Selected</strong>
                                                 </li>
-                                                <li id="sendingBranchAddress"><br></li>
-                                                <li id="sendingBranchContact"><br></li>
+                                                <li id="receivingBranchAddress"><br></li>
+                                                <li id="receivingBranchContact"><br></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -159,13 +173,11 @@ $branchList = $fetch->getBranches();
                             </button>
                         </div>
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
-                            <a href="products" class="btn btn-danger btn-px-4 py-3 border font-weight-semibold text-3">
+                            <a href="transfers" class="btn btn-danger btn-px-4 py-3 border font-weight-semibold text-3">
                                 Cancel
                             </a>
                         </div>
                     </div>
-
-                    <input type="hidden" name="receivingBranch" value="<?= htmlspecialchars($branch['branch_id']) ?>">
 
                 </form>
                 <!-- end: page -->
@@ -201,7 +213,7 @@ $branchList = $fetch->getBranches();
     <script src="/HungryPaws/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
-    
+
     <script src="/HungryPaws/assets/js/staff/notification.js"></script>
     <script src="/HungryPaws/assets/js/product/request-stock.js"></script>
     <?php

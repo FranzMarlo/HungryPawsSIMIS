@@ -6,16 +6,15 @@ $title = "Dashboard | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 $fetch = new fetchClass();
-$requestCount = $fetch->getRequestCount($branch_id);
-$productsOnStock = $fetch->getProductCountOnStock($branch_id);
-$orderCount = $fetch->getOrderCount($branch_id);
-$orderRecord = $fetch->getOrderTrend($branch_id);
-$averagePrice = $fetch->getAveragePrice($branch_id);
-$userCount = $fetch->getUserCount($branch_id);
-$revenue = $fetch->getRevenue($branch_id);
-$branchDetail = $fetch->getBranchDetails($branch_id);
-$products = $fetch->getTop5Products($branch_id);
-$expensives = $fetch->getMostExpensiveProducts($branch_id);
+$requestCount = $fetch->getGlobalRequestCount();
+$productsOnStock = $fetch->getGlobalProductCountOnStock();
+$orderCount = $fetch->getGlobalOrderCount();
+$orderRecord = $fetch->getGlobalOrderTrend();
+$averagePrice = $fetch->getGlobalAveragePrice();
+$userCount = $fetch->getGlobalUserCount();
+$revenue = $fetch->getGlobalRevenue();
+$products = $fetch->getGlobalTop5Products();
+$expensives = $fetch->getGlobalMostExpensiveProducts();
 
 $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']);
 ?>
@@ -50,7 +49,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                                 <h2 class="font-weight-bold text-color-dark text-5">
                                                     <?= htmlspecialchars($first_name), ' ', htmlspecialchars($last_name); ?>
                                                 </h2>
-                                                <p class="mb-0"><?= htmlspecialchars($branchDetail['branch_name']) ?>
+                                                <p class="mb-0">The Hungry Paws
                                                 </p>
                                                 <p class="mb-0">Manager</p>
 
@@ -64,7 +63,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                                     <div class="col-auto">
                                                         <strong
                                                             class="text-color-dark text-5"><?= htmlspecialchars($requestCount['request_count']) ?></strong>
-                                                        <h3 class="text-4-1">Stock Transfers</h3>
+                                                        <h3 class="text-4-1">Requested Transfers</h3>
                                                     </div>
                                                     <div class="col-auto">
                                                         <strong
@@ -188,7 +187,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                             <div class="card-body py-4">
                                 <div class="row align-items-center">
                                     <div class="col-12 col-md-8">
-                                        <h3 class="text-4-1 my-0">Total Branch Users</h3>
+                                        <h3 class="text-4-1 my-0">Total Users</h3>
                                         <strong
                                             class="text-6 text-color-dark"><?= htmlspecialchars($userCount['user_count']) ?></strong>
                                     </div>
@@ -332,11 +331,6 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
 
     </section>
 
-    <script>
-        const branchId = "<?= $_SESSION['branch_id'] ?>";
-    </script>
-
-
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/logout-modal.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/vendor.php';
@@ -347,7 +341,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
     <script src="/HungryPaws/assets/vendor/morris/morris.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
-    <script src="/HungryPaws/assets/js/admin/dashboard-charts.js"></script>
+    <script src="/HungryPaws/assets/js/admin/global-chart.js"></script>
     <script src="/HungryPaws/assets/js/manager/notification.js"></script>
 
     <?php

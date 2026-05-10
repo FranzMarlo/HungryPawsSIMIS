@@ -6,11 +6,11 @@ $title = "Update Stock Request | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 $fetch = new fetchClass();
-$products = $fetch->getStaffProducts($branch_id);
 $branchList = $fetch->getBranches();
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $requestID = $_GET['id'];
     $requestInfo = $fetch->getRequestInfo($requestID);
+    $products = $fetch->getStaffProductsByBranch($requestInfo['sending_id']);
 } else {
     header("Location: /hungrypaws/staff/transfers");
     exit;
@@ -47,6 +47,29 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <div class="card-body">
                                     <div class="form-row">
                                         <div class="form-group col mb-3">
+                                            <label for="branchSelect">Select
+                                                Sending Branch</label>
+                                            <select data-plugin-selectTwo
+                                                class="form-control form-control-modern populate" id="branchSelect"
+                                                name="branchSelect">
+                                                <?php if (!empty($branchList)): ?>
+                                                    <option value="" disabled selected>Select Branch</option>
+                                                    <?php foreach ($branchList as $item): ?>
+                                                        <option value="<?= htmlspecialchars($item['branch_id']) ?>"
+                                                            data-address="<?= htmlspecialchars($item['address']) ?>"
+                                                            data-contact="<?= htmlspecialchars($item['contact_number']) ?>"
+                                                            <?= ($item['branch_id'] === $requestInfo['sending_id']) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($item['branch_name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
+                                                    <option value="" disabled selected>No Branches Found</option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col mb-3">
                                             <label for="productSelect">Select
                                                 Product</label>
                                             <select data-plugin-selectTwo
@@ -57,7 +80,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                     <?php foreach ($products as $product): ?>
                                                         <option value="<?= htmlspecialchars($product['product_id']) ?>"
                                                             data-id="<?= htmlspecialchars($product['product_id']) ?>"
-                                                            data-stock="<?= htmlspecialchars($product['stock_level']) ?>"
+                                                            data-stock="<?= htmlspecialchars($product['total_stock']) ?>"
                                                             data-category="<?= htmlspecialchars($product['category']) ?>"
                                                             data-name="<?= htmlspecialchars($product['product_name']) ?>"
                                                             data-supplier="<?= htmlspecialchars($product['supplier_name']) ?>"
@@ -86,17 +109,17 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                     <div class="form-row">
                                         <div class="form-group col mb-3">
                                             <label for="branchSelect">Select
-                                                Sending Branch</label>
+                                                Receiving Branch</label>
                                             <select data-plugin-selectTwo
-                                                class="form-control form-control-modern populate" id="branchSelect"
-                                                name="branchSelect">
+                                                class="form-control form-control-modern populate" id="branch1Select"
+                                                name="branch1Select">
                                                 <?php if (!empty($branchList)): ?>
                                                     <option value="" disabled selected>Select Branch</option>
                                                     <?php foreach ($branchList as $item): ?>
                                                         <option value="<?= htmlspecialchars($item['branch_id']) ?>"
                                                             data-address="<?= htmlspecialchars($item['address']) ?>"
                                                             data-contact="<?= htmlspecialchars($item['contact_number']) ?>"
-                                                            <?= ($item['branch_id'] === $requestInfo['sending_branch_id']) ? 'selected' : '' ?>>
+                                                            <?= ($item['branch_id'] === $requestInfo['receiving_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($item['branch_name']) ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -119,6 +142,19 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-auto me-xl-5 pe-xl-5 mb-4 mb-xl-0">
+                                            <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
+                                                SENDING BRANCH</h3>
+                                            <ul class="list list-unstyled list-item-bottom-space-0">
+                                                <li><strong
+                                                        id="sendingBranchName"><?= htmlspecialchars($requestInfo['sending_branch']) ?></strong>
+                                                </li>
+                                                <li id="sendingBranchAddress">
+                                                    <?= htmlspecialchars($requestInfo['sending_address']) ?><br>
+                                                </li>
+                                                <li id="sendingBranchContact">
+                                                    <?= htmlspecialchars($requestInfo['sending_contact']) ?><br>
+                                                </li>
+                                            </ul>
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
                                                 PRODUCT DETAILS</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
@@ -143,7 +179,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                 <li>
                                                     <strong>Stocks Left:&nbsp;</strong>
                                                     <span
-                                                        id="productStock"><?= htmlspecialchars($requestInfo['stock_level']) ?></span>
+                                                        id="productStock"><?= htmlspecialchars($requestInfo['total_stock']) ?></span>
                                                 </li>
                                                 <li>
                                                     <strong>Quantity Requested:&nbsp;</strong>
@@ -156,17 +192,18 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         class="<?= getRequestStatusClass($requestInfo['status']) ?>"><?= htmlspecialchars($requestInfo['status']) ?></span>
                                                 </li>
                                             </ul>
+
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
-                                                SENDING BRANCH</h3>
+                                                RECEIVING BRANCH</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
                                                 <li><strong
-                                                        id="sendingBranchName"><?= htmlspecialchars($requestInfo['branch_name']) ?></strong>
+                                                        id="receivingBranchName"><?= htmlspecialchars($requestInfo['receiving_branch']) ?></strong>
                                                 </li>
-                                                <li id="sendingBranchAddress">
-                                                    <?= htmlspecialchars($requestInfo['address']) ?><br>
+                                                <li id="receivingBranchAddress">
+                                                    <?= htmlspecialchars($requestInfo['receiving_address']) ?><br>
                                                 </li>
-                                                <li id="sendingBranchContact">
-                                                    <?= htmlspecialchars($requestInfo['contact_number']) ?><br>
+                                                <li id="receivingBranchContact">
+                                                    <?= htmlspecialchars($requestInfo['receiving_contact']) ?><br>
                                                 </li>
                                             </ul>
                                         </div>
@@ -184,13 +221,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                 <i class="fa-solid fa-floppy-disk text-4 me-2"></i> Update Request
                             </button>
                         </div>
-                        <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
-                            <a href="#"
-                                class="btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
-                                id="completeRequestBtn" data-id="<?= htmlspecialchars($requestID) ?>">
-                                <i class="fa-solid fa-check text-4 me-2"></i> Complete Request
-                            </a>
-                        </div>
                         <div class="col-12 col-md-auto">
                             <a href="#"
                                 class="btn btn-danger btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
@@ -205,7 +235,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                             </a>
                         </div>
                         <input type="hidden" name="requestId" value="<?= htmlspecialchars($requestID) ?>">
-                        <input type="hidden" name="receivingBranch" value="<?= htmlspecialchars($branch_id) ?>">
                     </div>
                 </form>
                 <!-- end: page -->

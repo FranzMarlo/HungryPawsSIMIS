@@ -291,6 +291,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <script src="/HungryPaws/assets/vendor/ios7-switch/ios7-switch.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
 
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/theme.php';

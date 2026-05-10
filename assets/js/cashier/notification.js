@@ -29,7 +29,7 @@
   }
 
   function checkStockRequest() {
-    fetch("/HungryPaws/backend/manager/get-stock-request.php")
+    fetch("/HungryPaws/backend/cashier/get-branch-stock.php")
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success" && data.data.length > 0) {
@@ -47,8 +47,8 @@
           if (stockRequestItems.length > 3) {
             if (!activeNotices["_summary_"]) {
               const summaryNotice = new PNotify({
-                title: "Multiple Stock Transfer Requests",
-                text: `There are ${stockRequestItems.length} stock transfer request from other branches. <a href="transfers" style="color:#fff; text-decoration:underline;">View all</a>`,
+                title: "Multiple Stock Transfer",
+                text: `There are ${stockRequestItems.length} incoming stock transfer from other branches. <a href="transfers" style="color:#fff; text-decoration:underline;">View all</a>`,
                 addclass: "notification-primary click-2-close icon-nb",
                 icon: "fas fa-circle-info",
                 hide: false,
@@ -67,8 +67,8 @@
             stockRequestItems.forEach((item) => {
               if (!activeNotices[item.product_name]) {
                 const notice = new PNotify({
-                  title: "Stock Tranfer Request",
-                  text: `${item.branch_name} requests ${item.quantity} quantity of ${item.product_name}. The branch has ${item.total_stock} stocks left.`,
+                  title: "Incoming Stock Tranfer",
+                  text: `Incoming ${item.quantity} quantity of ${item.product_name} from ${item.branch_name}. Please mark the stock transfer as complete when received.`,
                   type: "primary",
                   addclass: "notification-primary click-2-close icon-nb",
                   icon: "fas fa-circle-info",

@@ -54,7 +54,8 @@ $products = $fetch->getProducts();
                                                         <option value="3">Unit Cost (₱)</option>
                                                         <option value="4">Selling Price (₱)</option>
                                                         <option value="5">Supplier</option>
-                                                        <option value="6">Status</option>
+                                                        <option value="6">Perishable</option>
+                                                        <option value="7">Status</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -95,6 +96,7 @@ $products = $fetch->getProducts();
                                                 <th>Unit Cost (₱)</th>
                                                 <th>Selling Price (₱)</th>
                                                 <th>Supplier</th>
+                                                <th>Perishable</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -111,6 +113,9 @@ $products = $fetch->getProducts();
                                                         <td><?= htmlspecialchars($product['unit_cost']) ?></td>
                                                         <td><?= htmlspecialchars($product['selling_price']) ?></td>
                                                         <td><?= htmlspecialchars($product['supplier_name']) ?></td>
+                                                        <td><span
+                                                                class="<?= getPerishableClass($product['is_perishable']) ?>"><?= getPerishableText($product['is_perishable']) ?></span>
+                                                        </td>
                                                         <td><span
                                                                 class="<?= getArchivedClass($product['archived']) ?>"><?= getArchivedText($product['archived']) ?></span>
                                                         </td>

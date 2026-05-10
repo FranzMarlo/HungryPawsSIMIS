@@ -9,11 +9,26 @@ class postClass extends db_connect
         $this->connect();
     }
 
-    public function addProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price)
+    public function beginTransaction()
+    {
+        return $this->conn->begin_transaction();
+    }
+
+    public function commit()
+    {
+        return $this->conn->commit();
+    }
+
+    public function rollback()
+    {
+        return $this->conn->rollback();
+    }
+
+    public function addProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price, $perish)
     {
         $query = $this->conn->prepare("
-            INSERT INTO product (product_id, product_name, barcode, supplier_id, category, unit_cost, selling_price)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO product (product_id, product_name, barcode, supplier_id, category, unit_cost, selling_price, is_perishable)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         if (!$query) {
@@ -24,7 +39,7 @@ class postClass extends db_connect
             ];
         }
 
-        $query->bind_param("sssssdd", $product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price);
+        $query->bind_param("sssssdds", $product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price, $perish);
 
         if ($query->execute()) {
             return [
@@ -41,10 +56,10 @@ class postClass extends db_connect
         }
     }
 
-    public function updateProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price)
+    public function updateProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price, $perish)
     {
         $check = $this->conn->prepare("
-        SELECT product_name, barcode, supplier_id, category, unit_cost, selling_price 
+        SELECT product_name, barcode, supplier_id, category, unit_cost, selling_price, is_perishable 
         FROM product 
         WHERE product_id = ?
     ");
@@ -64,6 +79,7 @@ class postClass extends db_connect
         $db_barcode = trim($result['barcode']);
         $db_supplier = (string) trim($result['supplier_id']);
         $db_category = trim($result['category']);
+        $db_perish = trim($result['is_perishable']);
         $db_unit_cost = (float) $result['unit_cost'];
         $db_selling_price = (float) $result['selling_price'];
 
@@ -71,6 +87,7 @@ class postClass extends db_connect
         $new_barcode = trim($barcode);
         $new_supplier = (string) trim($supplier_id);
         $new_category = trim($category);
+        $new_perish = trim($perish);
         $new_unit_cost = (float) $unit_cost;
         $new_selling_price = (float) $selling_price;
 
@@ -79,6 +96,7 @@ class postClass extends db_connect
             $db_barcode === $new_barcode &&
             $db_supplier === $new_supplier &&
             $db_category === $new_category &&
+            $db_perish === $new_perish &&
             abs($db_unit_cost - $new_unit_cost) < 0.0001 &&
             abs($db_selling_price - $new_selling_price) < 0.0001
         ) {
@@ -91,7 +109,7 @@ class postClass extends db_connect
 
         $query = $this->conn->prepare("
         UPDATE product 
-        SET product_name = ?, barcode = ?, supplier_id = ?, category = ?, unit_cost = ?, selling_price = ?
+        SET product_name = ?, barcode = ?, supplier_id = ?, category = ?, unit_cost = ?, selling_price = ?, is_perishable = ?
         WHERE product_id = ?
     ");
 
@@ -103,7 +121,7 @@ class postClass extends db_connect
             ];
         }
 
-        $query->bind_param("ssssdds", $new_name, $new_barcode, $new_supplier, $new_category, $new_unit_cost, $new_selling_price, $product_id);
+        $query->bind_param("ssssddss", $new_name, $new_barcode, $new_supplier, $new_category, $new_unit_cost, $new_selling_price, $perish, $product_id);
 
         if ($query->execute()) {
             return [
@@ -312,11 +330,75 @@ class postClass extends db_connect
         }
     }
 
-    public function addInventory($inventory_id, $branch_id, $product_id, $stock_level, $reorder_point, $last_update_date, $expiry_date)
+    public function addTransferItem($transfer_id, $inventory_id, $quantity)
     {
         $query = $this->conn->prepare("
-            INSERT INTO inventory (inventory_id, branch_id, product_id, stock_level, reorder_point, last_update_date, expiry_date)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO stock_transfer_items (
+            transfer_id,
+            inventory_id,
+            quantity
+        )
+        VALUES (?, ?, ?)
+    ");
+
+        $query->bind_param(
+            'ssi',
+            $transfer_id,
+            $inventory_id,
+            $quantity
+        );
+
+        return $query->execute();
+    }
+
+    public function deductInventoryStock($inventory_id, $quantity)
+    {
+        $query = $this->conn->prepare("
+        UPDATE inventory
+        SET stock_level = stock_level - ?
+        WHERE inventory_id = ?
+    ");
+
+        $query->bind_param(
+            'ii',
+            $quantity,
+            $inventory_id
+        );
+
+        return $query->execute();
+    }
+
+    public function updateTransferStatus($transfer_id, $status)
+    {
+        $query = $this->conn->prepare("
+        UPDATE stock_transfer
+        SET status = ?, approved_date = NOW()
+        WHERE transfer_id = ?
+    ");
+
+        $query->bind_param('ss', $status, $transfer_id);
+
+        return $query->execute();
+    }
+
+    public function completeTransferStatus($transfer_id, $status)
+    {
+        $query = $this->conn->prepare("
+        UPDATE stock_transfer
+        SET status = ?, received_date = NOW()
+        WHERE transfer_id = ?
+    ");
+
+        $query->bind_param('ss', $status, $transfer_id);
+
+        return $query->execute();
+    }
+
+    public function addInventory($inventory_id, $branch_id, $product_id, $stock_level, $reorder_point, $last_update_date, $expiry_date, $manufactured_date)
+    {
+        $query = $this->conn->prepare("
+            INSERT INTO inventory (inventory_id, branch_id, product_id, stock_level, reorder_point, last_update_date, expiry_date, manufactured_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         if (!$query) {
@@ -326,7 +408,7 @@ class postClass extends db_connect
                 "message" => $this->conn->error
             ];
         }
-        $query->bind_param("sssiiss", $inventory_id, $branch_id, $product_id, $stock_level, $reorder_point, $last_update_date, $expiry_date);
+        $query->bind_param("sssiisss", $inventory_id, $branch_id, $product_id, $stock_level, $reorder_point, $last_update_date, $expiry_date, $manufactured_date);
 
         if ($query->execute()) {
             return [
@@ -343,10 +425,10 @@ class postClass extends db_connect
         }
     }
 
-    public function updateInventory($inventory_id, $stock_level, $reorder_point, $last_update_date, $expiry_date)
+    public function updateInventory($inventory_id, $stock_level, $reorder_point, $last_update_date, $expiry_date, $manufactured_date)
     {
         $query = $this->conn->prepare("
-            UPDATE inventory SET stock_level = ?, reorder_point = ?, last_update_date = ?, expiry_date = ? 
+            UPDATE inventory SET stock_level = ?, reorder_point = ?, last_update_date = ?, expiry_date = ?, manufactured_date = ?
             WHERE inventory_id = ?;
         ");
 
@@ -357,7 +439,7 @@ class postClass extends db_connect
                 "message" => $this->conn->error
             ];
         }
-        $query->bind_param("iisss", $stock_level, $reorder_point, $last_update_date, $expiry_date, $inventory_id);
+        $query->bind_param("iissss", $stock_level, $reorder_point, $last_update_date, $expiry_date, $manufactured_date, $inventory_id);
 
         if ($query->execute()) {
             return [
@@ -413,6 +495,104 @@ class postClass extends db_connect
                 "message" => "Failed to cancel stock request: " . $query->error
             ];
         }
+    }
+
+    public function receiveInventoryBatch(
+        $product_id,
+        $branch_id,
+        $manufactured_date,
+        $expiry_date,
+        $reorder_point,
+        $quantity
+    ) {
+        $query = $this->conn->prepare("
+        SELECT inventory_id, stock_level
+        FROM inventory
+        WHERE product_id = ?
+        AND branch_id = ?
+        AND manufactured_date <=> ?
+        AND expiry_date <=> ?
+    ");
+
+        $query->bind_param(
+            'iiss',
+            $product_id,
+            $branch_id,
+            $manufactured_date,
+            $expiry_date
+        );
+
+        $query->execute();
+
+        $result = $query->get_result()->fetch_assoc();
+
+        // Existing batch
+        if ($result) {
+
+            $newStock = $result['stock_level'] + $quantity;
+
+            $update = $this->conn->prepare("
+            UPDATE inventory
+            SET stock_level = ?
+            WHERE inventory_id = ?
+        ");
+
+            $update->bind_param(
+                'ii',
+                $newStock,
+                $result['inventory_id']
+            );
+
+            return $update->execute();
+        }
+
+        // Create new batch
+        $inventoryId = $this->generateInventoryId();
+
+        $insert = $this->conn->prepare("
+    INSERT INTO inventory (
+        inventory_id,
+        product_id,
+        branch_id,
+        stock_level,
+        reorder_point,
+        manufactured_date,
+        expiry_date
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+        $insert->bind_param(
+            'siiiiss',
+            $inventoryId,
+            $product_id,
+            $branch_id,
+            $quantity,
+            $reorder_point,
+            $manufactured_date,
+            $expiry_date
+        );
+
+        return $insert->execute();
+    }
+
+    public function generateInventoryId()
+    {
+        $count = 0;
+        do {
+            $prefix = '480';
+            $randomDigits = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
+            $barcode = substr($prefix . $randomDigits, 0, 13);
+
+            $check = $this->conn->prepare("SELECT COUNT(*) FROM inventory WHERE inventory_id = ?");
+            $check->bind_param("s", $barcode);
+            $check->execute();
+            $check->bind_result($count);
+            $check->fetch();
+            $check->close();
+        } while ($count > 0);
+
+        return $barcode;
     }
 
     public function completeStockRequest($transfer_id)
@@ -497,12 +677,13 @@ class postClass extends db_connect
         }
     }
 
-    public function updateStockRequest($transfer_id, $product_id, $sending_branch_id, $quantity)
+    public function updateStockRequest($transfer_id, $product_id, $sending_branch_id, $receiving_branch_id, $quantity)
     {
         $query = $this->conn->prepare("
         UPDATE stock_transfer SET
         product_id = ?,
         sending_branch_id = ?,
+        receiving_branch_id = ?,
         quantity = ?
         WHERE transfer_id = ?;
         ");
@@ -514,7 +695,7 @@ class postClass extends db_connect
                 "message" => $this->conn->error
             ];
         }
-        $query->bind_param("ssis", $product_id, $sending_branch_id, $quantity, $transfer_id);
+        $query->bind_param("sssis", $product_id, $sending_branch_id, $receiving_branch_id, $quantity, $transfer_id);
 
         if ($query->execute()) {
             return [

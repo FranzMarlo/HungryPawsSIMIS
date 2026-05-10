@@ -94,8 +94,6 @@ $branches = $fetch->getBranches();
 														<option value="" selected disabled>Select Role</option>
 														<option value="Admin">Admin</option>
 														<option value="Cashier">Cashier</option>
-														<option value="Inventory Staff">Inventory Staff</option>
-														<option value="Manager">Manager</option>
 													</select>
 												</div>
 											</div>

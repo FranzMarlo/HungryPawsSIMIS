@@ -112,6 +112,23 @@ else {
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="form-group row align-items-center pb-3">
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Select
+                                                    Product Type</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <select data-plugin-selectTwo
+                                                        class="form-control form-control-modern populate"
+                                                        id="perishSelect" name="perishSelect">
+                                                        <option value="" selected disabled>Select Product Type</option>
+                                                        <option value="1" <?= 1 === $productDetails['is_perishable'] ? 'selected' : '' ?>>
+                                                            Perishable
+                                                        </option>
+                                                        <option value="0" <?= 0 === $productDetails['is_perishable'] ? 'selected' : '' ?>>
+                                                            Non-Perishable
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

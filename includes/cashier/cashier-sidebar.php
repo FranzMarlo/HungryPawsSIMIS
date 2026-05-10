@@ -26,26 +26,19 @@
                             <span>Product List</span>
                         </a>
                     </li>
-                    <li class="nav-parent <?= ($current_page == 'orders.php' || $current_page == 'add-order.php' || $current_page == 'receipt.php') ? 'nav-expanded' : '' ?>">
-                        <a class="nav-link" href="#">
-                            <i class="fa-solid fa-scroll" aria-hidden="true"></i>
-                            <span>Orders</span>
+                    <li class="<?= ($current_page == 'add-order.php') ? 'nav-active' : '' ?>">
+                        <a class="nav-link" href="add-order">
+                            <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                            <span>Add Order</span>
                         </a>
-                        <ul class="nav nav-children">
-                            <li class="<?= ($current_page == 'orders.php' || $current_page == 'receipt.php') ? 'nav-active' : '' ?>">
-                                <a class="nav-link" href="orders">
-                                    <i class="fa-solid fa-list-check" aria-hidden="true"></i>
-                                    <span>Order List</span>
-                                </a>
-                            </li>
-                            <li
-                                class="<?= ($current_page == 'add-order.php') ? 'nav-active' : '' ?>">
-                                <a class="nav-link" href="add-order">
-                                    <i class="bx bx-plus" aria-hidden="true"></i>
-                                    <span>Add Order</span>
-                                </a>
-                            </li>
-                        </ul>
+                    </li>
+
+                    <li
+                        class="<?= ($current_page == 'transfers.php' || $current_page == 'update-request.php') ? 'nav-active' : '' ?>">
+                        <a class="nav-link" href="transfers">
+                            <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+                            <span>Incoming Stock Transfers</span>
+                        </a>
                     </li>
                     <li>
                         <a class="nav-link modal-trigger" href="#modalLogoutConfirm">

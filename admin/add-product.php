@@ -51,7 +51,8 @@ $categories = $fetch->getCategories();
                                                 </div>
                                             </div>
                                             <div class="form-group row align-items-center pb-3">
-                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Barcode</label>
+                                                <label
+                                                    class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Barcode</label>
                                                 <div class="col-lg-7 col-xl-6">
                                                     <input type="text" class="form-control form-control-modern"
                                                         name="barcode" id="barcode" value=""
@@ -97,6 +98,23 @@ $categories = $fetch->getCategories();
                                                         <?php else: ?>
                                                             <option value="" selected disabled>No Category Found</option>
                                                         <?php endif; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center pb-3">
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Select
+                                                    Product Type</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <select data-plugin-selectTwo
+                                                        class="form-control form-control-modern populate"
+                                                        id="perishSelect" name="perishSelect">
+                                                        <option value="" selected disabled>Select Product Type</option>
+                                                        <option value="1">
+                                                            Perishable
+                                                        </option>
+                                                        <option value="0">
+                                                            Non-Perishable
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -161,9 +179,9 @@ $categories = $fetch->getCategories();
                             </button>
                         </div>
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
-							<a href="products"
-								class="cancel-button btn btn-light btn-px-4 py-3 border font-weight-semibold text-color-dark text-3">Cancel</a>
-						</div>
+                            <a href="products"
+                                class="cancel-button btn btn-light btn-px-4 py-3 border font-weight-semibold text-color-dark text-3">Cancel</a>
+                        </div>
                     </div>
                 </form>
                 <!-- end: page -->

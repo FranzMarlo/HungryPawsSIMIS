@@ -20,6 +20,7 @@ $(document).ready(function () {
 
   handleProductSelect();
   handleBranchSelect();
+  handleBranch1Select();
 });
 
 document
@@ -80,6 +81,10 @@ $(document).on("click", "#closeSuccessModal", function (e) {
   $("#sendingBranchName").text("No Branch Selected");
   $("#sendingBranchAddress").text("");
   $("#sendingBranchContact").text("");
+
+  $("#receivingBranchName").text("No Branch Selected");
+  $("#receivingBranchAddress").text("");
+  $("#receivingBranchContact").text("");
 
   $("#productName").text("No Product Selected");
   $("#productId").text("N/A");
@@ -155,6 +160,25 @@ function handleBranchSelect() {
   });
 }
 
+function handleBranch1Select() {
+  $("#branch1Select").on("change", function () {
+    const selectedOption = $(this).find("option:selected");
+    const branchName = selectedOption.text();
+    const branchAddress = selectedOption.data("address");
+    const branchContact = selectedOption.data("contact");
+
+    if (selectedOption.val()) {
+      $("#receivingBranchName").text(branchName);
+      $("#receivingBranchAddress").text(branchAddress);
+      $("#receivingBranchContact").text(branchContact);
+    } else {
+      $("#receivingBranchName").text("No Branch Selected");
+      $("#receivingBranchAddress").text("");
+      $("#receivingBranchContact").text("");
+    }
+  });
+}
+
 function handleProductSelect() {
   $("#productSelect").on("change", function () {
     const selectedOption = $(this).find("option:selected");
@@ -211,3 +235,48 @@ function showError(title, message) {
     modal: true,
   });
 }
+
+$("#branchSelect").on("change", function () {
+  let branchId = $(this).val();
+
+  $.ajax({
+    url: "/HungryPaws/backend/manager/get-branch-stock.php",
+    method: "GET",
+    data: { branch_id: branchId },
+    dataType: "json",
+
+    success: function (products) {
+      let productSelect = $("#productSelect");
+
+      // Clear old options
+      productSelect.empty();
+
+      // Add default option
+      productSelect.append(
+        '<option value="" disabled selected>Select Product</option>',
+      );
+
+      // Add fetched products
+      products.forEach(function (product) {
+        productSelect.append(`
+                        <option 
+                            value="${product.product_id}"
+                            data-id="${product.product_id}"
+                            data-stock="${product.total_stock}"
+                            data-category="${product.category}"
+                            data-name="${product.product_name}"
+                            data-supplier="${product.supplier_name}">
+                            ${product.product_name} (${product.total_stock})
+                        </option>
+                    `);
+      });
+
+      // Refresh Select2
+      productSelect.trigger("change.select2");
+    },
+  });
+});
+
+$("#productSelect").select2({
+  placeholder: "Select Product",
+});

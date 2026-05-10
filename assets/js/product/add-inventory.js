@@ -51,6 +51,21 @@ $(document).on("click", "#closeSuccessBtn", function (e) {
   $.magnificPopup.close();
 });
 
+$("#productSelect").on("change", function () {
+  let isPerish = $(this).find(":selected").data("perish");
+
+  // Set hidden input value
+  $("#isPerish").val(isPerish);
+
+  // Disable expiry date if non-perishable
+  if (isPerish == 0) {
+    $("#expiryDate").prop("disabled", true);
+    $("#expiryDate").val("");
+  } else {
+    $("#expiryDate").prop("disabled", false);
+  }
+});
+
 function showSuccess(title, message) {
   document.getElementById("successTitle").textContent = title;
   document.getElementById("successMessage").textContent = message;

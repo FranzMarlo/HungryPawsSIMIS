@@ -7,7 +7,7 @@ $title = "Products | Hungry Paws";
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 
 $fetch = new fetchClass();
-$products = $fetch->getInventoryProducts($branch_id);
+$products = $fetch->getInventoryProducts();
 ?>
 
 <body>
@@ -52,9 +52,10 @@ $products = $fetch->getInventoryProducts($branch_id);
                                                         <option value="0">Barcode</option>
                                                         <option value="1">Product Name</option>
                                                         <option value="2">Category</option>
+                                                        <option value="3">Branch</option>
                                                         <option value="4">Supplier</option>
-                                                        <option value="5">Expiry</option>
-                                                        <option value="6">Last Update</option>
+                                                        <option value="5">Manufactured</option>
+                                                        <option value="6">Expiry</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -92,10 +93,11 @@ $products = $fetch->getInventoryProducts($branch_id);
                                                 <th>Barcode</th>
                                                 <th>Product Name</th>
                                                 <th>Category</th>
+                                                <th>Branch</th>
                                                 <th>Stocks Left</th>
                                                 <th>Supplier</th>
+                                                <th>Manufactured Date</th>
                                                 <th>Expiry Date</th>
-                                                <th>Last Update</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -108,6 +110,8 @@ $products = $fetch->getInventoryProducts($branch_id);
                                                         <td><strong><?= htmlspecialchars($product['product_name']) ?></strong></a>
                                                         </td>
                                                         <td><?= htmlspecialchars($product['category']) ?></td>
+                                                        <td><?= htmlspecialchars($product['branch_name']) ?>
+                                                        </td>
                                                         <td>
                                                             <div
                                                                 class="text-center 
@@ -116,11 +120,21 @@ $products = $fetch->getInventoryProducts($branch_id);
                                                             </div>
                                                         </td>
                                                         <td><?= htmlspecialchars($product['supplier_name']) ?></td>
-                                                        <td><?= htmlspecialchars($product['expiry_date']) ?></td>
-                                                        <td><?= htmlspecialchars($product['last_update_date']) ?></td>
+                                                        <td>
+    <?= ($product['manufactured_date'] == '0000-00-00')
+                                                                ? 'None'
+                                                                : htmlspecialchars($product['manufactured_date']) ?>
+                                                        </td>
+                                                        
+                                                        <td>
+                                                            <?= ($product['expiry_date'] == '0000-00-00')
+                                                                ? 'None'
+                                                                : htmlspecialchars($product['expiry_date']) ?>
+                                                        </td>
                                                         <td>
                                                             <a href="update-inventory?id=<?= urlencode($product['inventory_id']) ?>"
-                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>

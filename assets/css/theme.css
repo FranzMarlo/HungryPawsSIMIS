@@ -2419,12 +2419,12 @@ html.no-overflowscrolling.sidebar-light:not(.dark) .inner-menu .nano {
 }
 
 /* Page Header */
-.page-header {
-  z-index: 1001;
-  /* Left Breadcumb */
-  /* Left Inline Breadcrumb */
-  /* Mobile */
-}
+/*.page-header { */
+/*z-index: 1001;*/
+/* Left Breadcumb */
+/* Left Inline Breadcrumb */
+/* Mobile */
+/*} */
 
 .page-header h2 {
   color: #fff;
@@ -4462,7 +4462,9 @@ html.dark .inner-menu .inner-menu-toggle-inside:after {
 
 @media (min-width: 992px) {
   .header-nav-main-effect-2 nav > ul > li.dropdown .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(0, -5px, 0);
     opacity: 0;
   }
@@ -4492,7 +4494,9 @@ html.dark .inner-menu .inner-menu-toggle-inside:after {
     .dropdown-menu
     li.dropdown-submenu
     > .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(-20px, 0, 0);
     opacity: 0;
   }
@@ -4515,7 +4519,9 @@ html.dark .inner-menu .inner-menu-toggle-inside:after {
     .dropdown-menu
     li.dropdown-submenu
     > .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(20px, 0, 0);
     left: auto;
     right: 100%;
@@ -5472,7 +5478,9 @@ html.header-dark .header .separator {
     > ul
     > li.dropdown
     .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(0, -5px, 0);
     opacity: 0;
   }
@@ -5518,7 +5526,9 @@ html.header-dark .header .separator {
     .dropdown-menu
     li.dropdown-submenu
     > .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(-20px, 0, 0);
     opacity: 0;
   }
@@ -5543,7 +5553,9 @@ html.header-dark .header .separator {
     .dropdown-menu
     li.dropdown-submenu
     > .dropdown-menu {
-    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    transition:
+      transform 0.2s ease-out,
+      opacity 0.2s ease-out;
     transform: translate3d(20px, 0, 0);
     left: auto;
     right: 100%;
@@ -10707,7 +10719,9 @@ html.dark div.DTTT_container .btn {
 }
 
 .datepicker table td.day {
-  transition: background-color 0.1s ease-in 0.1s, color 0.1s ease-in 0.1s;
+  transition:
+    background-color 0.1s ease-in 0.1s,
+    color 0.1s ease-in 0.1s;
   cursor: pointer;
 }
 
@@ -12555,7 +12569,8 @@ select.select-style-1:not(.form-control-sm):not(.form-control-lg) {
 
 select.select-style-1:focus {
   background-color: #f4f4f4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset,
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.075) inset,
     0 0 8px rgba(109, 109, 109, 0.3);
 }
 
@@ -12613,7 +12628,9 @@ select.select-style-1:focus {
 
 .form-control.error:focus {
   border-color: #843534;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ce8483;
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.075),
+    0 0 6px #ce8483;
 }
 
 .form-control.form-control-modern {
@@ -14069,7 +14086,9 @@ h6.text-shadow {
   left: 2px;
   position: absolute;
   border-radius: 20px;
-  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.075), 0 3px 5px rgba(0, 0, 0, 0.15),
+  box-shadow:
+    0 0 3px 1px rgba(0, 0, 0, 0.075),
+    0 3px 5px rgba(0, 0, 0, 0.15),
     1px 2px 2px rgba(0, 0, 0, 0.05);
   z-index: 3;
   transition: transform 0.3s 0.25s cubic-bezier(0.455, 0.03, 0.215, 1.33);
@@ -14792,7 +14811,9 @@ dl dd {
 }
 
 .loading-overlay {
-  transition: visibility 0s ease-in-out 0.5s, opacity 0.5s ease-in-out;
+  transition:
+    visibility 0s ease-in-out 0.5s,
+    opacity 0.5s ease-in-out;
   bottom: 0;
   left: 0;
   position: absolute;
@@ -14876,7 +14897,9 @@ body > .loading-overlay {
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px #ccc, 0 0 5px #ccc;
+  box-shadow:
+    0 0 10px #ccc,
+    0 0 5px #ccc;
   opacity: 1;
   transform: rotate(3deg) translate(0px, -4px);
 }
@@ -14924,7 +14947,9 @@ body > .loading-overlay {
 /* Markdown */
 .md-editor {
   border-radius: 4px;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 }
 
 .md-editor > .md-header {
@@ -15862,7 +15887,8 @@ ul.nav-list.primary > li a {
   border: 1px dashed #bbb;
   min-height: 100px;
   background-color: #e5e5e5;
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       45deg,
       white 25%,
       transparent 25%,
@@ -15879,7 +15905,9 @@ ul.nav-list.primary > li a {
       white
     );
   background-size: 60px 60px;
-  background-position: 0 0, 30px 30px;
+  background-position:
+    0 0,
+    30px 30px;
 }
 
 .dd-dragel {
@@ -16671,10 +16699,14 @@ body .ui-pnotify.icon-nb .notification .ui-pnotify-icon > span {
   background: #fff;
   border: 5px solid #fff;
   border-radius: 100px;
-  box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;
+  box-shadow:
+    0 5px 20px #ddd inset,
+    0 3px 0 #999 inset;
   color: #777;
   display: block;
-  font: bold 25px / 100px Georgia, Serif;
+  font:
+    bold 25px / 100px Georgia,
+    Serif;
   height: 100px;
   margin: 20px auto -65px;
   width: 100px;
@@ -16682,7 +16714,8 @@ body .ui-pnotify.icon-nb .notification .ui-pnotify-icon > span {
 
 .pricing-table .most-popular {
   border: 3px solid #ccc;
-  box-shadow: 11px 0 10px -10px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    11px 0 10px -10px rgba(0, 0, 0, 0.1),
     -11px 0 10px -10px rgba(0, 0, 0, 0.1);
   padding: 30px 20px;
   top: -10px;
@@ -16768,8 +16801,12 @@ body .ui-pnotify.icon-nb .notification .ui-pnotify-icon > span {
 
 .pricing-table.pricing-table-sm h3 span {
   border: 3px solid #fff;
-  box-shadow: 0 5px 20px #ddd inset, 0 3px 0 #999 inset;
-  font: bold 19px/65px Georgia, serif;
+  box-shadow:
+    0 5px 20px #ddd inset,
+    0 3px 0 #999 inset;
+  font:
+    bold 19px/65px Georgia,
+    serif;
   height: 70px;
   margin: 10px auto -65px;
   width: 70px;
@@ -16871,7 +16908,9 @@ html.dark .pricing-table h3 {
 html.dark .pricing-table h3 span {
   background: #2e353e;
   border-color: #242830;
-  box-shadow: 0 5px 20px #242830 inset, 0 3px 0 #282d36 inset;
+  box-shadow:
+    0 5px 20px #242830 inset,
+    0 3px 0 #282d36 inset;
   color: #ebebeb;
 }
 
@@ -17887,7 +17926,9 @@ html.dark .ui-slider.ui-widget-content {
 /* Summernote */
 .note-editor {
   border-radius: 4px;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition:
+    border-color ease-in-out 0.15s,
+    box-shadow ease-in-out 0.15s;
 }
 
 .note-editor,
@@ -17898,7 +17939,8 @@ html.dark .ui-slider.ui-widget-content {
 
 .note-editor.active {
   border-color: #66afe9;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+  box-shadow:
+    inset 0 1px 1px rgba(0, 0, 0, 0.075),
     0 0 8px rgba(102, 175, 233, 0.6);
 }
 
@@ -22840,7 +22882,9 @@ html.dark .body-sign .line-thru:after {
   content: " ";
   background: none repeat scroll 0 0 #ccc;
   border-radius: 50%;
-  box-shadow: 0 0 0 3px #fff, 0 0 0 6px #ccc;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 6px #ccc;
   height: 7px;
   left: 30px;
   top: 50%;
@@ -22950,7 +22994,9 @@ html.dark .timeline.timeline-simple .tm-body .tm-title {
 }
 
 html.dark .timeline.timeline-simple .tm-body .tm-items > li:before {
-  box-shadow: 0 0 0 3px #2e353e, 0 0 0 6px #ccc;
+  box-shadow:
+    0 0 0 3px #2e353e,
+    0 0 0 6px #ccc;
 }
 
 html.dark .timeline.timeline-simple .tm-body .tm-items > li .tm-box:after {

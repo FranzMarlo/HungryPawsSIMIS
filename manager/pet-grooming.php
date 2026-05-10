@@ -2,11 +2,11 @@
 <html class="modern fixed has-top-menu has-left-sidebar-half">
 
 <?php
-$title = "Products | Hungry Paws";
+$title = "Pet Grooming Records | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 $fetch = new fetchClass();
-$groomings = $fetch->getGroomingList($branch_id);
+$groomings = $fetch->getGroomingList();
 ?>
 
 <body>
@@ -48,8 +48,8 @@ $groomings = $fetch->getGroomingList($branch_id);
                                                     <select class="form-control select-style-1 filter-by"
                                                         name="filter-by">
                                                         <option value="all" selected>All</option>
-                                                        <option value="0">Service ID</option>
-                                                        <option value="1">Order ID</option>
+                                                        <option value="0">Order ID</option>
+                                                        <option value="1">Branch</option>
                                                         <option value="2">Pet Type</option>
                                                         <option value="3">Pet Size</option>
                                                         <option value="4">Groomer</option>
@@ -88,8 +88,8 @@ $groomings = $fetch->getGroomingList($branch_id);
 
                                         <thead>
                                             <tr>
-                                                <th>Service ID</th>
                                                 <th>Order ID</th>
+                                                <th>Branch</th>
                                                 <th>Pet Type</th>
                                                 <th>Pet Size</th>
                                                 <th>Groomer</th>
@@ -100,13 +100,14 @@ $groomings = $fetch->getGroomingList($branch_id);
                                             <?php if (!empty($groomings)): ?>
                                                 <?php foreach ($groomings as $grooming): ?>
                                                     <tr>
-                                                        <td><strong><?= htmlspecialchars($grooming['service_id']) ?></strong>
-                                                        </td>
                                                         <td>
                                                             <strong>
                                                                 <a href="receipt?id=<?= urlencode($grooming['order_id']) ?>"
                                                                     class="text-decoration-underline link-underline-dark text-dark"><?= htmlspecialchars($grooming['order_id']) ?>
                                                                 </a>
+                                                            </strong>
+                                                        </td>
+                                                        <td><strong><?= htmlspecialchars($grooming['branch_name']) ?>
                                                             </strong>
                                                         </td>
                                                         <td><?= htmlspecialchars($grooming['pet_type']) ?></td>

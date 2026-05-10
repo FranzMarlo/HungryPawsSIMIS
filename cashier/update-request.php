@@ -4,15 +4,14 @@
 <?php
 $title = "Update Stock Request | Hungry Paws";
 
-include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/cashier-head.php';
 $fetch = new fetchClass();
-$products = $fetch->getCashierProducts($branch_id);
 $branchList = $fetch->getBranches();
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $requestID = $_GET['id'];
     $requestInfo = $fetch->getRequestInfo($requestID);
 } else {
-    header("Location: /hungrypaws/manager/transfers");
+    header("Location: /hungrypaws/cashier/transfers");
     exit;
 }
 ?>
@@ -21,32 +20,45 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <section class="body">
 
         <?php
-        include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-header.php';
+        include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/cashier-header.php';
         ?>
 
         <div class="inner-wrapper">
             <?php
-            include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-sidebar.php';
+            include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/cashier-sidebar.php';
             ?>
 
             <section role="main" class="content-body content-body-modern mt-0">
                 <header class="page-header page-header-left-inline-breadcrumb">
-                    <h2 class="font-weight-bold text-6">View Stock Transfer Request</h2>
+                    <h2 class="font-weight-bold text-6">Confirm Incoming Stock Transfer</h2>
                 </header>
 
 
                 <!-- start: page -->
-                <div class="order-details action-buttons-fixed">
+                <div class="order-details action-buttons-fixed" method="post">
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col-xl-12 mb-2">
 
                             <div class="card card-modern">
                                 <div class="card-header">
-                                    <h2 class="card-title">Request Summary</h2>
+                                    <h2 class="card-title">Stock Transfer Summary</h2>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-xl-auto me-xl-5 pe-xl-5 mb-4 mb-xl-0">
+                                            <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
+                                                SENDING BRANCH</h3>
+                                            <ul class="list list-unstyled list-item-bottom-space-0">
+                                                <li><strong
+                                                        id="sendingBranchName"><?= htmlspecialchars($requestInfo['sending_branch']) ?></strong>
+                                                </li>
+                                                <li id="sendingBranchAddress">
+                                                    <?= htmlspecialchars($requestInfo['sending_address']) ?><br>
+                                                </li>
+                                                <li id="sendingBranchContact">
+                                                    <?= htmlspecialchars($requestInfo['sending_contact']) ?><br>
+                                                </li>
+                                            </ul>
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
                                                 PRODUCT DETAILS</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
@@ -69,7 +81,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         id="productSupplier"><?= htmlspecialchars($requestInfo['supplier_name']) ?></span>
                                                 </li>
                                                 <li>
-                                                    <strong>Stocks Left:&nbsp;</strong>
+                                                    <strong>Sending Branch Stocks Left:&nbsp;</strong>
                                                     <span
                                                         id="productStock"><?= htmlspecialchars($requestInfo['total_stock']) ?></span>
                                                 </li>
@@ -84,25 +96,12 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         class="<?= getRequestStatusClass($requestInfo['status']) ?>"><?= htmlspecialchars($requestInfo['status']) ?></span>
                                                 </li>
                                             </ul>
-                                            <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
-                                                SENDING BRANCH</h3>
-                                            <ul class="list list-unstyled list-item-bottom-space-0">
-                                                <li><strong
-                                                        id="sendingBranchName"><?= htmlspecialchars($requestInfo['sending_branch']) ?></strong>
-                                                </li>
-                                                <li id="sendingBranchAddress">
-                                                    <?= htmlspecialchars($requestInfo['sending_address']) ?><br>
-                                                </li>
-                                                <li id="sendingBranchContact">
-                                                    <?= htmlspecialchars($requestInfo['sending_contact']) ?><br>
-                                                </li>
-                                            </ul>
+
                                             <h3 class="text-color-dark font-weight-bold text-4 line-height-1 mt-0 mb-3">
                                                 RECEIVING BRANCH</h3>
                                             <ul class="list list-unstyled list-item-bottom-space-0">
-                                                <li><strong id="receivingBranchName">
-                                                        <?= htmlspecialchars($requestInfo['receiving_branch']) ?>
-                                                    </strong>
+                                                <li><strong
+                                                        id="receivingBranchName"><?= htmlspecialchars($requestInfo['receiving_branch']) ?></strong>
                                                 </li>
                                                 <li id="receivingBranchAddress">
                                                     <?= htmlspecialchars($requestInfo['receiving_address']) ?><br>
@@ -118,41 +117,32 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                         </div>
                     </div>
 
-                    <div class="row action-buttons align-items-start align-items-md-center mt-4">
-                        <div class="col-12 col-md-auto">
-                            <a href="#"
-                                class="submit-button btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
-                                data-loading-text="Loading..." id="approveRequestBtn"
-                                data-id="<?= htmlspecialchars($requestID) ?>">
-                                <i class="fa-solid fa-check text-4 me-2"></i> Approve Request
-                            </a>
-                        </div>
+                    <div class="row action-buttons align-items-start align-items-md-center">
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
                             <a href="#"
-                                class="btn btn-danger btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
-                                id="cancelRequestBtn" data-id="<?= htmlspecialchars($requestID) ?>">
-                                <i class="fa-solid fa-ban text-4 me-2"></i> Cancel Request
+                                class="btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                id="completeRequestBtn" data-id="<?= htmlspecialchars($requestID) ?>">
+                                <i class="fa-solid fa-check text-4 me-2"></i> Complete Request
                             </a>
                         </div>
-                        <div class="col-12 col-md-auto ms-md-auto mt-3 mt-md-0 ms-auto">
+                        <div class="col-12 col-md-auto ms-md-auto mt-3 mt-md-0 ms-auto mt-md-1">
                             <a href="transfers"
                                 class="btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
                                 <i class="fa-solid fa-arrow-left text-4 me-2"></i> Back
                             </a>
                         </div>
                         <input type="hidden" name="requestId" value="<?= htmlspecialchars($requestID) ?>">
-                        <input type="hidden" name="receivingBranch" value="<?= htmlspecialchars($branch_id) ?>">
                     </div>
-                </div>
-                <!-- end: page -->
+                    </form>
+                    <!-- end: page -->
             </section>
         </div>
     </section>
 
 
     <?php
-    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/logout-modal.php';
-    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/update-request-modal.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/logout-modal.php';
+    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/cashier/update-request-modal.php';
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/vendor.php';
     ?>
 
@@ -178,8 +168,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
 
-    <script src="/HungryPaws/assets/js/product/manage-stock-request.js"></script>
-    <script src="/HungryPaws/assets/js/manager/notification.js"></script>
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
+    <script src="/HungryPaws/assets/js/product/complete-stock-request.js"></script>
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/theme.php';
     ?>

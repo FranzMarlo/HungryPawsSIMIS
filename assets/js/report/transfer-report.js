@@ -48,10 +48,10 @@ document
     const endDate = document.getElementById("endDate").value;
     const branchId = document.getElementById("branchId").value;
 
-    if (!branchId || !startDate || !endDate) {
+    if (!startDate || !endDate) {
       showWarning(
         "Missing Fields",
-        "Please select a branch and date range before printing the report."
+        "Please select a branch and date range before printing the report.",
       );
       return;
     }
@@ -135,7 +135,7 @@ function loadMostTransferredProductsChart(data) {
   $("#mostTransferredPlaceholder").remove();
   $("#mostTransferredCanvas").remove();
   $("#mostTransferredChart").append(
-    `<canvas id="mostTransferredCanvas"></canvas>`
+    `<canvas id="mostTransferredCanvas"></canvas>`,
   );
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -294,7 +294,7 @@ function loadTransferStatusChart(data) {
   $("#transferStatusCanvas").remove();
 
   $("#transferStatusChart").append(
-    `<canvas id="transferStatusCanvas"></canvas>`
+    `<canvas id="transferStatusCanvas"></canvas>`,
   );
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -398,7 +398,6 @@ function loadTransferTrendChart(data) {
   const labels = data.map((row) => row.period_label);
   const totals = data.map((row) => Number(row.total_transfers));
 
-
   const ctx = document.getElementById("transferTrendCanvas").getContext("2d");
 
   if (transferTrendChart) transferTrendChart.destroy();
@@ -426,4 +425,3 @@ function loadTransferTrendChart(data) {
     },
   });
 }
-

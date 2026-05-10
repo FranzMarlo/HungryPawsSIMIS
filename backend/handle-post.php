@@ -13,6 +13,7 @@ switch ($submitType) {
         $barcode = $_POST['barcode'] ?? '';
         $supplier_id = $_POST['supplierSelect'] ?? '';
         $category = $_POST['categorySelect'] ?? '';
+        $perish = $_POST['perishSelect'] ?? '';
         $unit_cost = $_POST['unitCost'] ?? '';
         $selling_price = $_POST['sellingPrice'] ?? '';
 
@@ -32,6 +33,10 @@ switch ($submitType) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Category Of The Product"]);
             exit;
         }
+        if ($perish === null || $perish === "") {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select If The Product Is Perishable or Non-Perishable"]);
+            exit;
+        }
         if (empty($unit_cost)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Unit Cost Of The Product"]);
             exit;
@@ -49,7 +54,7 @@ switch ($submitType) {
 
         $product_id = $helper->generateUniqueProductBarcode();
 
-        $response = $postClass->addProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price);
+        $response = $postClass->addProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price, $perish);
 
         echo json_encode($response);
         break;
@@ -60,6 +65,7 @@ switch ($submitType) {
         $product_name = ucwords($_POST['productName']) ?? '';
         $supplier_id = $_POST['supplierSelect'] ?? '';
         $category = $_POST['categorySelect'] ?? '';
+        $perish = $_POST['perishSelect'] ?? '';
         $unit_cost = $_POST['unitCost'] ?? '';
         $selling_price = $_POST['sellingPrice'] ?? '';
 
@@ -71,6 +77,9 @@ switch ($submitType) {
             exit;
         } elseif (empty($category) || $category === "Null") {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Category Of The Product"]);
+            exit;
+        } else if ($perish === null || $perish === "") {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select If The Product Is Perishable or Non-Perishable"]);
             exit;
         } elseif (empty($unit_cost)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Unit Cost Of The Product"]);
@@ -87,7 +96,7 @@ switch ($submitType) {
         }
 
 
-        $response = $postClass->updateProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price);
+        $response = $postClass->updateProduct($product_id, $product_name, $barcode, $supplier_id, $category, $unit_cost, $selling_price, $perish);
 
         echo json_encode($response);
         break;
@@ -486,11 +495,10 @@ switch ($submitType) {
         break;
 
     case 'requestStock':
-        $receivingBranch = $_POST['receivingBranch'] ?? '';
         $productSelect = $_POST['productSelect'] ?? '';
         $quantity = $_POST['quantity'] ?? '';
         $branchSelect = $_POST['branchSelect'] ?? '';
-
+        $branch1Select = $_POST['branch1Select'] ?? '';
 
         if (empty($productSelect)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select A Product To Be Requested"]);
@@ -501,16 +509,23 @@ switch ($submitType) {
         } elseif (empty($branchSelect)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Sending Branch For The Request"]);
             exit;
-        } elseif ($branchSelect === $receivingBranch) {
+        } elseif (empty($branch1Select)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Receiving Branch For The Request"]);
+            exit;
+        } elseif ($branchSelect === $branch1Select) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Sending and Receiving Branch Cannot Be The Same Branch To Process Request"]);
             exit;
         }
-
+        $totalBranchStock = $helper->sumProductStock($productSelect, $branchSelect);
+        if ($quantity >= $totalBranchStock['total_stock']) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Quantity Requested Exceeds Branch Stock Of Product"]);
+            exit;
+        }
 
         $requestId = $helper->generateUniqueRequestId();
         $currentDateTime = date('Y-m-d H:i:s');
 
-        $response = $postClass->addStockRequest($requestId, $productSelect, $branchSelect, $receivingBranch, $quantity, $currentDateTime);
+        $response = $postClass->addStockRequest($requestId, $productSelect, $branchSelect, $branch1Select, $quantity, $currentDateTime);
 
         echo json_encode($response);
         break;
@@ -520,6 +535,8 @@ switch ($submitType) {
         $productSelect = $_POST['productSelect'] ?? '';
         $productQuantity = $_POST['productQuantity'] ?? '';
         $productPoint = $_POST['productPoint'] ?? '';
+        $isPerish = $_POST['isPerish'] ?? '';
+        $manufacturedDate = $_POST['manufacturedDate'] ?? '';
         $expiryDate = $_POST['expiryDate'] ?? '';
 
 
@@ -528,9 +545,8 @@ switch ($submitType) {
             exit;
         }
 
-        $inventoryCount = $helper->checkProductInventory($productSelect, $inventoryBranch);
-        if ($inventoryCount > 0) {
-            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Inventory For Product Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
+        if (empty($inventoryBranch)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select Branch For Inventory"]);
             exit;
         }
 
@@ -549,50 +565,134 @@ switch ($submitType) {
             exit;
         }
 
-        if (empty($expiryDate)) {
+        if (empty($manufacturedDate)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Set The Manufactured Date For Product's Inventory"]);
+            exit;
+        }
+
+        if (empty($expiryDate) && $isPerish == 1) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Set The Expiry Date For Product's Inventory"]);
             exit;
         }
 
-        $expiryDate = trim($expiryDate);
-        $timestamp = strtotime($expiryDate);
+        if ($isPerish == 1) {
+            $expiryDate = trim($expiryDate);
+            $timestamp = strtotime($expiryDate);
 
-        if ($timestamp === false) {
-            echo json_encode([
-                "status" => "warning",
-                "title" => "Warning!",
-                "message" => "Invalid Expiry Date Format. Please Set Valid Date (YYYY-MM-DD)."
-            ]);
-            exit;
+            if ($timestamp === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Expiry Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
+
+            $manufacturedDate = trim($manufacturedDate);
+            $timestamp1 = strtotime($manufacturedDate);
+
+            if ($timestamp1 === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Manufactured Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
+
+            $date = new DateTime("@$timestamp");
+            $date->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedExpiryDate = $date->format('Y-m-d');
+
+            $today = new DateTime('today');
+            if ($date < $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Expiry Date Cannot Be In The Past"
+                ]);
+                exit;
+            }
+
+            $date1 = new DateTime("@$timestamp1");
+            $date1->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedManufacturedDate = $date1->format('Y-m-d');
+
+            if ($date1 > $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Manufactured Date Cannot Be In The Future"
+                ]);
+                exit;
+            }
+
+            $inventoryCount = $helper->checkProductInventory($productSelect, $inventoryBranch, $formattedExpiryDate);
+            if ($inventoryCount > 0) {
+                echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "An Inventory For Product With The Same Expiry Date Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
+                exit;
+            }
+
+            $inventoryId = $helper->generateInventoryId();
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            $response = $postClass->addInventory($inventoryId, $inventoryBranch, $productSelect, $productQuantity, $productPoint, $currentDateTime, $formattedExpiryDate, $formattedManufacturedDate);
+
+            echo json_encode($response);
+
+        } else {
+
+
+            $manufacturedDate = trim($manufacturedDate);
+            $timestamp = strtotime($manufacturedDate);
+
+            if ($timestamp === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Manufactured Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
+
+            $date = new DateTime("@$timestamp");
+            $date->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedManufacturedDate = $date->format('Y-m-d');
+
+            $today = new DateTime('today');
+            if ($date > $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Manufactured Date Cannot Be In The Future"
+                ]);
+                exit;
+            }
+
+            $inventoryCount = $helper->checkManufacturedInventory($productSelect, $inventoryBranch, $formattedManufacturedDate);
+            if ($inventoryCount > 0) {
+                echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "An Inventory For Product With The Same Manufactured Date Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
+                exit;
+            }
+
+            $inventoryId = $helper->generateInventoryId();
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            $response = $postClass->addInventory($inventoryId, $inventoryBranch, $productSelect, $productQuantity, $productPoint, $currentDateTime, "", $formattedManufacturedDate);
+
+            echo json_encode($response);
         }
-
-        $date = new DateTime("@$timestamp");
-        $date->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
-        $formattedExpiryDate = $date->format('Y-m-d');
-
-        $today = new DateTime('today');
-        if ($date < $today) {
-            echo json_encode([
-                "status" => "warning",
-                "title" => "Warning!",
-                "message" => "Expiry Date Cannot Be In The Past"
-            ]);
-            exit;
-        }
-
-        $inventoryId = $helper->generateInventoryId();
-        $currentDateTime = date('Y-m-d H:i:s');
-
-        $response = $postClass->addInventory($inventoryId, $inventoryBranch, $productSelect, $productQuantity, $productPoint, $currentDateTime, $formattedExpiryDate);
-
-        echo json_encode($response);
         break;
 
     case 'updateInventory':
         $inventoryId = $_POST['inventoryId'] ?? '';
         $productName = $_POST['productName'] ?? '';
+        $productId = $_POST['productId'] ?? '';
+        $branchId = $_POST['branchId'] ?? '';
         $productQuantity = $_POST['productQuantity'] ?? '';
         $productPoint = $_POST['productPoint'] ?? '';
+        $isPerish = $_POST['isPerish'] ?? '';
+        $manufacturedDate = $_POST['manufacturedDate'] ?? '';
         $expiryDate = $_POST['expiryDate'] ?? '';
 
 
@@ -611,56 +711,148 @@ switch ($submitType) {
             exit;
         }
 
-        if (empty($expiryDate)) {
+        if (empty($manufacturedDate)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Set The Manufactured Date For Product's Inventory"]);
+            exit;
+        }
+
+        if (empty($expiryDate) && $isPerish == 1) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Set The Expiry Date For Product's Inventory"]);
             exit;
         }
+        if ($isPerish == 1) {
+            $expiryDate = trim($expiryDate);
+            $timestamp = strtotime($expiryDate);
 
-        $expiryDate = trim($expiryDate);
-        $timestamp = strtotime($expiryDate);
-        $date = new DateTime("@$timestamp");
-        $date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        $formattedExpiryDate = $date->format('Y-m-d');
+            if ($timestamp === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Expiry Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
 
-        $today = new DateTime('today');
+            $manufacturedDate = trim($manufacturedDate);
+            $timestamp1 = strtotime($manufacturedDate);
 
-        if ($timestamp === false) {
-            echo json_encode([
-                "status" => "warning",
-                "title" => "Warning!",
-                "message" => "Invalid Expiry Date Format. Please Set Valid Date (YYYY-MM-DD)."
-            ]);
-            exit;
+            if ($timestamp1 === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Manufactured Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
+
+            $date = new DateTime("@$timestamp");
+            $date->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedExpiryDate = $date->format('Y-m-d');
+
+            $today = new DateTime('today');
+            if ($date < $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Expiry Date Cannot Be In The Past"
+                ]);
+                exit;
+            }
+
+            $date1 = new DateTime("@$timestamp1");
+            $date1->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedManufacturedDate = $date1->format('Y-m-d');
+
+            if ($date1 > $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Manufactured Date Cannot Be In The Future"
+                ]);
+                exit;
+            }
+
+            $inventoryCount = $helper->checkProductInventory($productId, $branchId, $formattedExpiryDate);
+            if ($inventoryCount > 1) {
+                echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "An Inventory For Product With The Same Expiry Date Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
+                exit;
+            }
+
+            $inventoryInfo = $helper->getInventoryInfo($inventoryId);
+            if ($inventoryInfo['archived'] == 1) {
+                echo json_encode(["status" => "error", "title" => "Invalid Action", "message" => "Archived Products Are Not Allowed To Be Updated"]);
+                exit;
+            }
+
+            if (
+                $productQuantity == $inventoryInfo['stock_level'] && $productPoint == $inventoryInfo['reorder_point']
+                && $formattedExpiryDate == $inventoryInfo['expiry_date'] && $formattedManufacturedDate == $inventoryInfo['manufactured_date']
+            ) {
+                echo json_encode(["status" => "info", "title" => "Info", "message" => "No Changes Made"]);
+                exit;
+            }
+
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            $response = $postClass->updateInventory($inventoryId, $productQuantity, $productPoint, $currentDateTime, $formattedExpiryDate, $formattedManufacturedDate);
+
+            echo json_encode($response);
+        } else {
+
+            $manufacturedDate = trim($manufacturedDate);
+            $timestamp1 = strtotime($manufacturedDate);
+
+            if ($timestamp1 === false) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Invalid Manufactured Date Format. Please Set Valid Date (YYYY-MM-DD)."
+                ]);
+                exit;
+            }
+            $today = new DateTime('today');
+
+            $date1 = new DateTime("@$timestamp1");
+            $date1->setTimezone(new DateTimeZone(date_default_timezone_get())); // normalize timezone
+            $formattedManufacturedDate = $date1->format('Y-m-d');
+
+            if ($date1 > $today) {
+                echo json_encode([
+                    "status" => "warning",
+                    "title" => "Warning!",
+                    "message" => "Manufactured Date Cannot Be In The Future"
+                ]);
+                exit;
+            }
+
+            $inventoryCount = $helper->checkManufacturedInventory($productId, $branchId, $formattedManufacturedDate);
+            if ($inventoryCount > 0) {
+                echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "An Inventory For Product With The Same Manufactured Date Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
+                exit;
+            }
+
+            $inventoryInfo = $helper->getInventoryInfo($inventoryId);
+            if ($inventoryInfo['archived'] == 1) {
+                echo json_encode(["status" => "error", "title" => "Invalid Action", "message" => "Archived Products Are Not Allowed To Be Updated"]);
+                exit;
+            }
+
+            if (
+                $productQuantity == $inventoryInfo['stock_level'] && $productPoint == $inventoryInfo['reorder_point']
+                && "0000-00-00" == $inventoryInfo['expiry_date'] && $formattedManufacturedDate == $inventoryInfo['manufactured_date']
+            ) {
+                echo json_encode(["status" => "info", "title" => "Info", "message" => "No Changes Made"]);
+                exit;
+            }
+
+            $currentDateTime = date('Y-m-d H:i:s');
+
+            $response = $postClass->updateInventory($inventoryId, $productQuantity, $productPoint, $currentDateTime, "", $formattedManufacturedDate);
+
+            echo json_encode($response);
         }
 
-        if ($date < $today) {
-            echo json_encode([
-                "status" => "warning",
-                "title" => "Warning!",
-                "message" => "Expiry Date Cannot Be In The Past"
-            ]);
-            exit;
-        }
 
-        $inventoryInfo = $helper->getInventoryInfo($inventoryId);
-        if ($inventoryInfo['archived'] == 1) {
-            echo json_encode(["status" => "error", "title" => "Invalid Action", "message" => "Archived Products Are Not Allowed To Be Updated"]);
-            exit;
-        }
-
-        if (
-            $productQuantity == $inventoryInfo['stock_level'] && $productPoint == $inventoryInfo['reorder_point']
-            && $formattedExpiryDate == $inventoryInfo['expiry_date']
-        ) {
-            echo json_encode(["status" => "info", "title" => "Info", "message" => "No Changes Made"]);
-            exit;
-        }
-
-        $currentDateTime = date('Y-m-d H:i:s');
-
-        $response = $postClass->updateInventory($inventoryId, $productQuantity, $productPoint, $currentDateTime, $formattedExpiryDate);
-
-        echo json_encode($response);
         break;
 
     case 'cancelStockRequest':
@@ -680,43 +872,214 @@ switch ($submitType) {
         break;
 
     case 'completeStockRequest':
+
         $transferId = $_POST['transferId'];
 
         $requestInfo = $helper->getRequestInfo($transferId);
 
-        if ($requestInfo['status'] !== "Approved") {
-            echo json_encode(["status" => "error", "title" => "Invalid Action!", "message" => "Only Requests With Approved Status Are Eligible For Completion"]);
+        if (!$requestInfo) {
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "Error!",
+                "message" => "Transfer Request Not Found"
+            ]);
             exit;
         }
 
-        $post = new postClass();
-        $response = $post->completeStockRequest($transferId);
+        if ($requestInfo['status'] !== "Approved") {
 
-        echo json_encode($response);
+            echo json_encode([
+                "status" => "error",
+                "title" => "Invalid Action!",
+                "message" => "Only Approved Requests Can Be Completed"
+            ]);
+            exit;
+        }
+
+        $receiving_branch = $requestInfo['receiving_branch_id'];
+
+        $transferItems = $helper->getTransferItems($transferId);
+
+        if (empty($transferItems)) {
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "No Transfer Items",
+                "message" => "No transfer breakdown found."
+            ]);
+            exit;
+        }
+
+        $postClass->beginTransaction();
+
+        try {
+
+            foreach ($transferItems as $item) {
+
+                $postClass->receiveInventoryBatch(
+                    $item['product_id'],
+                    $receiving_branch,
+                    $item['manufactured_date'],
+                    $item['expiry_date'],
+                    $item['reorder_point'],
+                    $item['quantity']
+                );
+            }
+
+            $postClass->completeTransferStatus(
+                $transferId,
+                'Completed'
+            );
+
+            $postClass->commit();
+
+            echo json_encode([
+                "status" => "success",
+                "title" => "Completed!",
+                "message" => "Stock successfully received by branch."
+            ]);
+
+        } catch (Exception $e) {
+
+            $postClass->rollback();
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "Transaction Failed",
+                "message" => $e->getMessage()
+            ]);
+        }
+
         break;
 
     case 'approveStockRequest':
+
         $transferId = $_POST['transferId'];
 
-        $requestInfo = $helper->getRequestInfo($transferId);
+        $requestInfo = $helper->getTransferInfo($transferId);
 
-        if ($requestInfo['status'] !== "Requested") {
-            echo json_encode(["status" => "error", "title" => "Invalid Action!", "message" => "Only Requests With Requested Status Are Eligible For Request Approval"]);
+        if (!$requestInfo) {
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "Error!",
+                "message" => "Transfer Request Not Found"
+            ]);
             exit;
         }
 
-        $post = new postClass();
-        $response = $post->approveStockRequest($transferId);
+        if ($requestInfo['status'] !== "Requested") {
 
-        echo json_encode($response);
+            echo json_encode([
+                "status" => "error",
+                "title" => "Invalid Action!",
+                "message" => "Only Requested Transfers Can Be Approved"
+            ]);
+            exit;
+        }
+
+        $product_id = $requestInfo['product_id'];
+        $sending_branch = $requestInfo['sending_branch_id'];
+        $requested_qty = (int) $requestInfo['quantity'];
+
+        // Fetch FEFO batches
+        $batches = $helper->getInventoryBatchesForTransfer(
+            $product_id,
+            $sending_branch
+        );
+
+        if (empty($batches)) {
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "No Stock!",
+                "message" => "No Available Inventory Batches"
+            ]);
+            exit;
+        }
+
+        $totalAvailable = 0;
+
+        foreach ($batches as $b) {
+            $totalAvailable += (int) $b['stock_level'];
+        }
+
+        if ($totalAvailable < $requested_qty) {
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "Insufficient Stock",
+                "message" => "Cannot approve request. Not enough inventory in sending branch."
+            ]);
+            exit;
+        }
+
+        $postClass->beginTransaction();
+
+        try {
+
+            $remaining = $requested_qty;
+
+            foreach ($batches as $batch) {
+
+                if ($remaining <= 0) {
+                    break;
+                }
+
+                $available = (int) $batch['stock_level'];
+
+                $deduct = min($available, $remaining);
+
+                // Insert transfer breakdown (stock_transfer_items)
+                $postClass->addTransferItem(
+                    $transferId,
+                    $batch['inventory_id'],
+                    $deduct
+                );
+
+                // Deduct inventory stock
+                $postClass->deductInventoryStock(
+                    $batch['inventory_id'],
+                    $deduct
+                );
+
+                $remaining -= $deduct;
+            }
+
+            // Final status update
+            $postClass->updateTransferStatus(
+                $transferId,
+                'Approved'
+            );
+
+            $postClass->commit();
+
+            echo json_encode([
+                "status" => "success",
+                "title" => "Approved!",
+                "message" => "Stock request approved and inventory deducted successfully."
+            ]);
+
+        } catch (Exception $e) {
+
+            $postClass->rollback();
+
+            echo json_encode([
+                "status" => "error",
+                "title" => "Transaction Failed",
+                "message" => $e->getMessage()
+            ]);
+        }
+
         break;
 
     case 'updateRequestStock':
         $requestId = $_POST['requestId'] ?? '';
-        $receivingBranch = $_POST['receivingBranch'] ?? '';
         $productSelect = $_POST['productSelect'] ?? '';
         $quantity = $_POST['quantity'] ?? '';
         $branchSelect = $_POST['branchSelect'] ?? '';
+        $branch1Select = $_POST['branch1Select'] ?? '';
 
         if (empty($productSelect)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select A Product To Be Requested"]);
@@ -727,8 +1090,17 @@ switch ($submitType) {
         } elseif (empty($branchSelect)) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Sending Branch For The Request"]);
             exit;
-        } elseif ($branchSelect === $receivingBranch) {
+        } elseif (empty($branch1Select)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Select The Receiving Branch For The Request"]);
+            exit;
+        } elseif ($branchSelect === $branch1Select) {
             echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Sending and Receiving Branch Cannot Be The Same Branch To Process Request"]);
+            exit;
+        }
+
+        $totalBranchStock = $helper->sumProductStock($productSelect, $branchSelect);
+        if ($quantity >= $totalBranchStock['total_stock']) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Quantity Requested Exceeds Branch Stock Of Product"]);
             exit;
         }
 
@@ -739,12 +1111,12 @@ switch ($submitType) {
             exit;
         }
 
-        if ($requestInfo['product_id'] == $productSelect && $requestInfo['quantity'] == $quantity && $requestInfo['sending_branch_id'] == $branchSelect) {
+        if ($requestInfo['product_id'] == $productSelect && $requestInfo['quantity'] == $quantity && $requestInfo['sending_branch_id'] == $branchSelect && $requestInfo['receiving_branch_id'] == $branch1Select) {
             echo json_encode(["status" => "info", "title" => "Info", "message" => "No Changes Made"]);
             exit;
         }
 
-        $response = $postClass->updateStockRequest($requestId, $productSelect, $branchSelect, $quantity);
+        $response = $postClass->updateStockRequest($requestId, $productSelect, $branchSelect, $branch1Select, $quantity);
 
         echo json_encode($response);
         break;

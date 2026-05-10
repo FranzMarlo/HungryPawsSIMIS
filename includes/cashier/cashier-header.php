@@ -27,22 +27,17 @@
                                 Product List
                             </a>
                         </li>
-                        <li class="dropdown <?= ($current_page == 'orders.php' || $current_page == 'add-order.php' || $current_page == 'receipt.php') ? 'active' : '' ?>">
-                            <a class="nav-link dropdown-toggle" href="#">
-                               Orders
+                        <li
+                            class="dropdown <?= ($current_page == 'add-order.php' || $current_page == 'receipt.php') ? 'active' : '' ?>">
+                            <a class="nav-link" href="add-order">
+                                Add Order
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="nav-link" href="orders">
-                                        Order List
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="nav-link" href="add-order">
-                                        Add Order
-                                    </a>
-                                </li>
-                            </ul>
+                        </li>
+                        <li
+                            class="dropdown <?= ($current_page == 'stock-transfer.php' || $current_page == 'transfers.php' || $current_page == 'update-request.php') ? 'active' : '' ?>">
+                            <a class="nav-link" href="transfers">
+                                Incoming Stock Transfers
+                            </a>
                         </li>
                         <li>
                             <a class="nav-link modal-trigger" href="#modalLogoutConfirm">

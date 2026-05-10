@@ -15,7 +15,6 @@ if ($_SESSION['role'] !== "Manager") {
 
 
 $user_id = $_SESSION['user_id'];
-$branch_id = $_SESSION['branch_id'];
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $first_name = $_SESSION['first_name'];
@@ -54,7 +53,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/morris/morris.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/datatables/media/css/dataTables.bootstrap5.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/pnotify/pnotify.custom.css" />
-    
+
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/jquery-ui/jquery-ui.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/jquery-ui/jquery-ui.theme.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/select2/css/select2.css" />

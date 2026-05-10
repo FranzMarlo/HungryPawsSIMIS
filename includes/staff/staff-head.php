@@ -14,7 +14,6 @@ if ($_SESSION['role'] !== "Inventory Staff") {
 }
 
 $user_id = $_SESSION['user_id'];
-$branch_id = $_SESSION['branch_id'];
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $first_name = $_SESSION['first_name'];

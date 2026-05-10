@@ -6,9 +6,8 @@ header('Content-Type: application/json');
 
 $fetch = new fetchClass();
 
-$items = $fetch->getStockRequestAlert();
+$branch_id = $_GET['branch_id'];
 
-echo json_encode([
-    "status" => "success",
-    "data" => $items
-]);
+$products = $fetch->getStaffProductsByBranch($branch_id);
+
+echo json_encode($products);

@@ -13,14 +13,25 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = $_SESSION['user_id'];
-
+$role = $_SESSION['role'];
 $fetch = new fetchClass();
+if ($role == "Manager" || $role == "Inventory Staff") {
+    $userStatus = $fetch->checkMainUserStatus($userId);
 
-$userStatus = $fetch->checkUserStatus($userId);
+    echo json_encode([
+        "status" => "success",
+        "data" => [
+            "is_disabled" => (int) $userStatus
+        ]
+    ]);
+} else {
 
-echo json_encode([
-    "status" => "success",
-    "data" => [
-        "is_disabled" => (int) $userStatus
-    ]
-]);
+    $userStatus = $fetch->checkUserStatus($userId);
+
+    echo json_encode([
+        "status" => "success",
+        "data" => [
+            "is_disabled" => (int) $userStatus
+        ]
+    ]);
+}

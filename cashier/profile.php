@@ -36,8 +36,7 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                             <div class="card-body">
                                 <div class="thumb-info mb-3">
                                     <img src="/HungryPaws/uploads/image/profile/<?= htmlspecialchars($image) ?>"
-                                        id="profile-icon"
-                                        class="rounded img-fluid"
+                                        id="profile-icon" class="rounded img-fluid"
                                         alt="<?= htmlspecialchars($first_name), ' ', htmlspecialchars($last_name); ?>">
                                     <div class="thumb-info-title">
                                         <span
@@ -196,7 +195,7 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                                 <p class="text-light">Total Orders Processed</p>
                             </li>
                             <li class="primary">
-                                <h3><?= htmlspecialchars('₱' . number_format($saleStats['total_amount'], 2))?></h3>
+                                <h3><?= htmlspecialchars('₱' . number_format($saleStats['total_amount'], 2)) ?></h3>
                                 <p class="text-light">Total Value Processed.</p>
                             </li>
                             <li class="primary">
@@ -253,6 +252,7 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
     <script src="/HungryPaws/assets/vendor/flot.tooltip/jquery.flot.tooltip.js"></script>
 
     <script src="/HungryPaws/assets/js/profile.js"></script>
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
 
 
     <?php

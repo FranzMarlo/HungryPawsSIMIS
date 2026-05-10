@@ -25,18 +25,7 @@ $(document).ready(function () {
       "Do you want to cancel this stock request? This action is <strong>irreversible</strong>.",
       function () {
         cancelRequest();
-      }
-    );
-  });
-
-  $(document).on("click", "#completeRequestBtn", function (e) {
-    e.preventDefault();
-    showConfirm(
-      "Are You Sure?",
-      "Do you want to mark this stock request as completed? This action is <strong>irreversible</strong>.",
-      function () {
-        completeRequest();
-      }
+      },
     );
   });
 
@@ -50,6 +39,7 @@ $(document).ready(function () {
 
   handleProductSelect();
   handleBranchSelect();
+  handleBranch1Select();
 });
 
 document
@@ -155,6 +145,25 @@ function handleBranchSelect() {
       $("#sendingBranchName").text("No Branch Selected");
       $("#sendingBranchAddress").text("");
       $("#sendingBranchContact").text("");
+    }
+  });
+}
+
+function handleBranch1Select() {
+  $("#branch1Select").on("change", function () {
+    const selectedOption = $(this).find("option:selected");
+    const branchName = selectedOption.text();
+    const branchAddress = selectedOption.data("address");
+    const branchContact = selectedOption.data("contact");
+
+    if (selectedOption.val()) {
+      $("#receivingBranchName").text(branchName);
+      $("#receivingBranchAddress").text(branchAddress);
+      $("#receivingBranchContact").text(branchContact);
+    } else {
+      $("#receivingBranchName").text("No Branch Selected");
+      $("#receivingBranchAddress").text("");
+      $("#receivingBranchContact").text("");
     }
   });
 }
@@ -280,31 +289,47 @@ function cancelRequest() {
     });
 }
 
-function completeRequest() {
-  $.magnificPopup.close();
-  const transferId = $("#completeRequestBtn").data("id");
+$("#branchSelect").on("change", function () {
+  let branchId = $(this).val();
 
-  const formData = new FormData();
-  formData.append("submitType", "completeStockRequest");
-  formData.append("transferId", transferId);
+  $.ajax({
+    url: "/HungryPaws/backend/manager/get-branch-stock.php",
+    method: "GET",
+    data: { branch_id: branchId },
+    dataType: "json",
 
-  fetch("/HungryPaws/backend/handle-post.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.status === "success") {
-        updateStatus("Completed", "ecommerce-status completed");
-        showSuccess(response.title, response.message);
-      } else if (response.status === "warning") {
-        showWarning(response.title, response.message);
-      } else {
-        showError(response.title, response.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Fetch Error:", error);
-      showError("Error!", "Something went wrong. Please try again.");
-    });
-}
+    success: function (products) {
+      let productSelect = $("#productSelect");
+
+      // Clear old options
+      productSelect.empty();
+
+      // Add default option
+      productSelect.append(
+        '<option value="" disabled selected>Select Product</option>',
+      );
+
+      // Add fetched products
+      products.forEach(function (product) {
+        productSelect.append(`
+                        <option 
+                            value="${product.product_id}"
+                            data-id="${product.product_id}"
+                            data-stock="${product.total_stock}"
+                            data-category="${product.category}"
+                            data-name="${product.product_name}"
+                            data-supplier="${product.supplier_name}">
+                            ${product.product_name} (${product.total_stock})
+                        </option>
+                    `);
+      });
+
+      // Refresh Select2
+      productSelect.trigger("change.select2");
+    },
+  });
+});
+
+$("#productSelect").select2({
+  placeholder: "Select Product",
+});

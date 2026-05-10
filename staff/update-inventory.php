@@ -6,13 +6,15 @@ $title = "Update Inventory | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 $fetch = new fetchClass();
+$branches = $fetch->getBranches();
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $inventoryID = $_GET['id'];
     $inventoryInfo = $fetch->getInventoryInfo($inventoryID);
 } else {
-    header("Location: /hungrypaws/staff/transfers");
+    header("Location: /hungrypaws/staff/products");
     exit;
 }
+
 ?>
 
 <body>
@@ -57,6 +59,16 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                 </div>
                                             </div>
                                             <div class="form-group row align-items-center pb-3">
+                                                <label
+                                                    class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Branch</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <input type="text" class="form-control form-control-modern"
+                                                        name="branchName" id="branchName"
+                                                        value="<?= htmlspecialchars($inventoryInfo['branch_name']) ?>"
+                                                        disabled />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center pb-3">
                                                 <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Quantity
                                                     On Hand</label>
                                                 <div class="col-lg-7 col-xl-6">
@@ -77,8 +89,28 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                 </div>
                                             </div>
                                             <div class="form-group row align-items-center pb-3">
-                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Set
-                                                    Product Expiry Date</label>
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">
+                                                    Manufactured Date</label>
+                                                <div class="col-lg-7 col-xl-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                        </span>
+                                                        <input type="text" data-plugin-datepicker
+                                                            name="manufacturedDate" id="manufacturedDate"
+                                                            class="form-control form-control-modern" value="<?= (!empty($inventoryInfo['manufactured_date'])
+                                                                && $inventoryInfo['manufactured_date'] != '0000-00-00')
+                                                                ? htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['manufactured_date'])))
+                                                                : '' ?>" placeholder="<?= (!empty($inventoryInfo['manufactured_date'])
+                                                                  && $inventoryInfo['manufactured_date'] != '0000-00-00')
+                                                                  ? htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['manufactured_date'])))
+                                                                  : 'Manufactured Date' ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center pb-3">
+                                                <label class="col-lg-5 col-xl-3 control-label text-lg-end mb-0">Expiry
+                                                    Date</label>
                                                 <div class="col-lg-7 col-xl-6">
                                                     <div class="input-group">
                                                         <span class="input-group-text">
@@ -86,9 +118,22 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         </span>
                                                         <input type="text" data-plugin-datepicker name="expiryDate"
                                                             id="expiryDate" class="form-control form-control-modern"
-                                                            value="<?= htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['expiry_date']))) ?>"
-                                                            placeholder="<?= htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['expiry_date']))) ?>">
+                                                            value="<?= (
+                                                                !empty($inventoryInfo['expiry_date']) &&
+                                                                $inventoryInfo['expiry_date'] != '0000-00-00'
+                                                            )
+                                                                ? htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['expiry_date'])))
+                                                                : '' ?>" placeholder="<?= (
+                                                                  !empty($inventoryInfo['expiry_date']) &&
+                                                                  $inventoryInfo['expiry_date'] != '0000-00-00'
+                                                              )
+                                                                  ? htmlspecialchars(date('m/d/Y', strtotime($inventoryInfo['expiry_date'])))
+                                                                  : 'Not Applicable' ?>" <?= ($inventoryInfo['is_perishable'] == 0)
+                                                                    ? 'disabled'
+                                                                    : '' ?>>
                                                     </div>
+                                                    <input type="hidden" name="isPerish" id="isPerish"
+                                                        value="<?= htmlspecialchars($inventoryInfo['is_perishable']) ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -111,6 +156,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                             </a>
                         </div>
                     </div>
+                    <input type="hidden" name="productId" value="<?= htmlspecialchars($inventoryInfo['product_id']) ?>">
+                    <input type="hidden" name="branchId" value="<?= htmlspecialchars($inventoryInfo['branch_id']) ?>">
                     <input type="hidden" name="inventoryId" value="<?= htmlspecialchars($inventoryID) ?>">
                 </form>
                 <!-- end: page -->

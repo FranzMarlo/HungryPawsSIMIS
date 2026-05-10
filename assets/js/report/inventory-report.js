@@ -60,11 +60,11 @@ document
                 item.stock_level === 0
                   ? "bg-danger"
                   : item.stock_level <= item.reorder_point
-                  ? "bg-warning"
-                  : "bg-success"
+                    ? "bg-warning"
+                    : "bg-success"
               }">${
-              item.stock_level === 0 ? "No Stock" : item.stock_status
-            }</span>
+                item.stock_level === 0 ? "No Stock" : item.stock_status
+              }</span>
             </td>
             <td>${item.last_update_date}</td>
             <td>${item.expiry_date}</td>
@@ -74,7 +74,7 @@ document
           });
           showSuccess(
             "Report Generated",
-            "Inventory report successfully loaded."
+            "Inventory report successfully loaded.",
           );
         } else {
           tbody.innerHTML = `
@@ -88,7 +88,7 @@ document
       console.error("Fetch Error:", error);
       showError(
         "Server Error",
-        "Unable to load report. Please try again later."
+        "Unable to load report. Please try again later.",
       );
     }
   });
@@ -104,10 +104,10 @@ document
     const branchId = document.getElementById("branchId").value;
 
     // 🟡 Validate required inputs
-    if (!branchId || !filterType || !startDate || !endDate) {
+    if (!filterType || !startDate || !endDate) {
       showWarning(
         "Missing Fields",
-        "Please select a branch, filter type, and date range before printing the report."
+        "Please select a branch, filter type, and date range before printing the report.",
       );
       return;
     }

@@ -6,7 +6,7 @@ $title = "Products | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 $fetch = new fetchClass();
-$products = $fetch->getCashierProducts($branch_id);
+$products = $fetch->getGlobalProducts();
 ?>
 
 <body>
@@ -48,13 +48,12 @@ $products = $fetch->getCashierProducts($branch_id);
                                                     <select class="form-control select-style-1 filter-by"
                                                         name="filter-by">
                                                         <option value="all" selected>All</option>
-                                                        <option value="0">Barcode</option>
-                                                        <option value="1">Product Name</option>
-                                                        <option value="2">Category</option>
-                                                        <option value="4">Unit Cost (₱)</option>
-                                                        <option value="5">Selling Price (₱)</option>
-                                                        <option value="6">Expiry</option>
-                                                        <option value="7">Last Update</option>
+                                                        <option value="0">Product Name</option>
+                                                        <option value="1">Category</option>
+                                                        <option value="2">Branch</option>
+                                                        <option value="5">Unit Cost (₱)</option>
+                                                        <option value="6">Selling Price (₱)</option>
+                                                        <option value="7">Expiry</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -89,25 +88,24 @@ $products = $fetch->getCashierProducts($branch_id);
 
                                         <thead>
                                             <tr>
-                                                <th>Barcode</th>
                                                 <th>Product Name</th>
                                                 <th>Category</th>
+                                                <th>Branch</th>
                                                 <th>Stocks Left</th>
                                                 <th>Unit Cost (₱)</th>
                                                 <th>Selling Price (₱)</th>
                                                 <th>Expiry Date</th>
-                                                <th>Last Update</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (!empty($products)): ?>
                                                 <?php foreach ($products as $product): ?>
                                                     <tr>
-                                                        <td><strong><?= htmlspecialchars($product['barcode']) ?></strong></a>
-                                                        </td>
                                                         <td><strong><?= htmlspecialchars($product['product_name']) ?></strong></a>
                                                         </td>
                                                         <td><?= htmlspecialchars($product['category']) ?></td>
+                                                        <td><?= htmlspecialchars($product['branch_name']) ?>
+                                                        </td>
                                                         <td>
                                                             <div
                                                                 class="text-center 
@@ -118,12 +116,11 @@ $products = $fetch->getCashierProducts($branch_id);
                                                         <td><?= htmlspecialchars($product['unit_cost']) ?></td>
                                                         <td><?= htmlspecialchars($product['selling_price']) ?></td>
                                                         <td><?= htmlspecialchars($product['expiry_date']) ?></td>
-                                                        <td><?= htmlspecialchars($product['last_update_date']) ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="6" class="text-center">
+                                                    <td colspan="7" class="text-center">
                                                         No products found
                                                     </td>
                                                 </tr>

@@ -2,11 +2,11 @@
 <html class="modern fixed has-top-menu has-left-sidebar-half">
 
 <?php
-$title = "Products | Hungry Paws";
+$title = "Pet Hotel Records | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/manager/manager-head.php';
 $fetch = new fetchClass();
-$bookings = $fetch->getBookingList($branch_id);
+$bookings = $fetch->getBookingList();
 ?>
 
 <body>
@@ -48,8 +48,8 @@ $bookings = $fetch->getBookingList($branch_id);
                                                     <select class="form-control select-style-1 filter-by"
                                                         name="filter-by">
                                                         <option value="all" selected>All</option>
-                                                        <option value="0">Booking ID</option>
-                                                        <option value="1">Order ID</option>
+                                                        <option value="0">Order ID</option>
+                                                        <option value="1">Branch</option>
                                                         <option value="2">Pet Type</option>
                                                         <option value="3">Room Type</option>
                                                         <option value="4">Check-In Date</option>
@@ -88,8 +88,8 @@ $bookings = $fetch->getBookingList($branch_id);
 
                                         <thead>
                                             <tr>
-                                                <th>Service ID</th>
-                                                <th>Booking ID</th>
+                                                <th>Order ID</th>
+                                                <th>Branch</th>
                                                 <th>Pet Type</th>
                                                 <th>Room Type</th>
                                                 <th>Check-In Date</th>
@@ -100,8 +100,6 @@ $bookings = $fetch->getBookingList($branch_id);
                                             <?php if (!empty($bookings)): ?>
                                                 <?php foreach ($bookings as $booking): ?>
                                                     <tr>
-                                                        <td><strong><?= htmlspecialchars($booking['booking_id']) ?></strong>
-                                                        </td>
                                                         <td>
                                                             <strong>
                                                                 <a href="receipt?id=<?= urlencode($booking['order_id']) ?>"
@@ -109,6 +107,8 @@ $bookings = $fetch->getBookingList($branch_id);
                                                                 </a>
                                                             </strong>
                                                         </td>
+                                                        <td><strong><?= htmlspecialchars($booking['branch_name']) ?>
+                                                            </strong>
                                                         </td>
                                                         <td><?= htmlspecialchars($booking['pet_type']) ?></td>
                                                         <td><?= htmlspecialchars($booking['room_type']) ?></td>

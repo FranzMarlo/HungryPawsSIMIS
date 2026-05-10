@@ -108,8 +108,12 @@ $products = $fetch->getCashierProducts($branch_id);
                                                         <td><strong><?= htmlspecialchars($product['product_name']) ?></strong></a>
                                                         </td>
                                                         <td><?= htmlspecialchars($product['category']) ?></td>
-                                                        <td><div class="text-center 
-                                                        <?= getStockClass($product['stock_level'], $product['reorder_point'] )?>"><?= htmlspecialchars($product['stock_level']) ?></div></td>
+                                                        <td>
+                                                            <div
+                                                                class="text-center 
+                                                        <?= getStockClass($product['stock_level'], $product['reorder_point']) ?>">
+                                                                <?= htmlspecialchars($product['stock_level']) ?></div>
+                                                        </td>
                                                         <td><?= htmlspecialchars($product['unit_cost']) ?></td>
                                                         <td><?= htmlspecialchars($product['selling_price']) ?></td>
                                                         <td><?= htmlspecialchars($product['expiry_date']) ?></td>
@@ -157,6 +161,7 @@ $products = $fetch->getCashierProducts($branch_id);
 
     <script src="/HungryPaws/assets/vendor/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="/HungryPaws/assets/vendor/datatables/media/js/dataTables.bootstrap5.min.js"></script>
+    <script src="/HungryPaws/assets/js/cashier/notification.js"></script>
 
     <?php
     include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/theme.php';

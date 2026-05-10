@@ -7,7 +7,7 @@ $title = "Stock Requests | Hungry Paws";
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 
 $fetch = new fetchClass();
-$requests = $fetch->getStockRequests($branch_id);
+$requests = $fetch->getStockRequests();
 ?>
 
 <body>
@@ -53,8 +53,9 @@ $requests = $fetch->getStockRequests($branch_id);
                                                         <option value="1">Product Name</option>
                                                         <option value="2">Quantity</option>
                                                         <option value="3">Sending Branch</option>
-                                                        <option value="4">Transfer Date</option>
-                                                        <option value="5">Status</option>
+                                                        <option value="4">Receiving Branch</option>
+                                                        <option value="5">Transfer Date</option>
+                                                        <option value="6">Status</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -93,6 +94,7 @@ $requests = $fetch->getStockRequests($branch_id);
                                                 <th>Requested Product</th>
                                                 <th>Quantity</th>
                                                 <th>Sending Branch</th>
+                                                <th>Receiving Branch</th>
                                                 <th>Transfer Date</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
@@ -109,6 +111,8 @@ $requests = $fetch->getStockRequests($branch_id);
                                                         <td class="text-center"><?= htmlspecialchars($request['quantity']) ?>
                                                         </td>
                                                         <td><?= htmlspecialchars($request['sending_branch']) ?></td>
+                                                        <td><?= htmlspecialchars($request['receiving_branch']) ?>
+                                                        </td>
                                                         <td width="15%"><?= htmlspecialchars($request['transfer_date']) ?></td>
                                                         <td><span
                                                                 class="<?= getRequestStatusClass($request['status']) ?>"><?= htmlspecialchars($request['status']) ?>
@@ -122,8 +126,8 @@ $requests = $fetch->getStockRequests($branch_id);
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="6" class="text-center">
-                                                        No products found
+                                                    <td colspan="8" class="text-center">
+                                                        No requests found
                                                     </td>
                                                 </tr>
                                             <?php endif; ?>
