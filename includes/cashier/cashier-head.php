@@ -20,6 +20,8 @@ $first_name = $_SESSION['first_name'];
 $last_name = $_SESSION['last_name'];
 $email = $_SESSION['email'];
 $image = $_SESSION['image'];
+$branch_color = $_SESSION['branch_color'];
+$roleColor = $_SESSION['role_color'] ?? '#6B7280';
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/fetch-class.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
@@ -83,5 +85,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
 
     <!-- Head Libs -->
     <script src="/HungryPaws/assets/vendor/modernizr/modernizr.js"></script>
+
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/style.php';
+    ?>
 
 </head>

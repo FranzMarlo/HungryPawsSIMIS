@@ -1045,11 +1045,22 @@ class postClass extends db_connect
         }
     }
 
-    public function addBranch($branch_name, $address, $contact_number)
+    public function addBranch($branch_name, $address, $contact_number, $branch_color)
     {
-        $query = $this->conn->prepare("INSERT INTO branch (branch_name, address, contact_number)
-                VALUES (?, ?, ?)");
-        $query->bind_param("sss", $branch_name, $address, $contact_number);
+        $query = $this->conn->prepare("INSERT INTO branch (
+                branch_name,
+                address,
+                contact_number,
+                branch_color
+            )
+            VALUES (?, ?, ?, ?)");
+        $query->bind_param(
+            "ssss",
+            $branch_name,
+            $address,
+            $contact_number,
+            $branch_color
+        );
 
         if ($query->execute()) {
             return [

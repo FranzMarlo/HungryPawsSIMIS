@@ -1,7 +1,7 @@
 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
 <!-- start: header -->
 <header class="header header-nav-menu header-nav-links">
-    <div class="logo-container">
+    <div class="logo-container dynamic-role-theme">
         <a href="dashboard" class="logo">
 
             <img src="/HungryPaws/assets/img/logo-banner.png" class="logo-image" width="150" height="35"

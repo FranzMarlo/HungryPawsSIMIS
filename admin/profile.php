@@ -8,7 +8,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/admin/admin-head.php';
 
 $fetch = new fetchClass();
 $branchDetail = $fetch->getBranchDetails($branch_id);
-$saleStats = $fetch->getSaleStats($branch_id, $user_id);
+$saleStats = $fetch->getAdminSaleStats($branch_id);
 ?>
 
 <body>
@@ -36,14 +36,13 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                             <div class="card-body">
                                 <div class="thumb-info mb-3">
                                     <img src="/HungryPaws/uploads/image/profile/<?= htmlspecialchars($image) ?>"
-                                        id="profile-icon"
-                                        class="rounded img-fluid"
+                                        id="profile-icon" class="rounded img-fluid"
                                         alt="<?= htmlspecialchars($first_name), ' ', htmlspecialchars($last_name); ?>">
                                     <div class="thumb-info-title">
                                         <span
                                             class="thumb-info-inner"><?= htmlspecialchars($first_name), ' ', htmlspecialchars($last_name); ?></span>
                                         <span
-                                            class="thumb-info-type text-uppercase"><?= htmlspecialchars($role); ?></span>
+                                            class="thumb-info-type dynamic-role-theme text-uppercase"><?= htmlspecialchars($role); ?></span>
                                     </div>
                                 </div>
 
@@ -52,38 +51,38 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                                 <ul class="list-group">
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">First Name</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">First Name</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($first_name); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Last Name</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Last Name</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($last_name); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Role</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Role</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($role); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Branch</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Branch</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($branchDetail['branch_name']); ?>
                                         </p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">User ID</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">User ID</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($user_id); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Username</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Username</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($username); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Email</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Email</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($email); ?></p>
                                     </li>
 
@@ -191,17 +190,23 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
 
                         <h4 class="mb-3 mt-0 font-weight-semibold text-dark">Sale Stats</h4>
                         <ul class="simple-card-list mb-3">
-                            <li class="primary">
+                            <li class="primary dynamic-role-theme">
                                 <h3><?= htmlspecialchars($saleStats['total_orders']) ?></h3>
                                 <p class="text-light">Total Orders Processed</p>
                             </li>
-                            <li class="primary">
-                                <h3><?= htmlspecialchars('₱' . number_format($saleStats['total_amount'], 2))?></h3>
+                            <li class="primary dynamic-role-theme">
+                                <h3><?= htmlspecialchars('₱' . number_format($saleStats['total_amount'], 2)) ?></h3>
                                 <p class="text-light">Total Value Processed.</p>
                             </li>
-                            <li class="primary">
-                                <h3><?= htmlspecialchars($saleStats['total_grooming']) ?></h3>
-                                <p class="text-light">Total Pets Groomed</p>
+                            <li class="primary dynamic-role-theme">
+                                <h3><?= htmlspecialchars($saleStats['total_cashier']) ?></h3>
+                                <p class="text-light">Total Cashiers</p>
+                            </li>
+                            <li class="primary dynamic-role-theme">
+                                <h3>
+                                    <?= htmlspecialchars($saleStats['total_products']) ?>
+                                </h3>
+                                <p class="text-light">Total Products</p>
                             </li>
                         </ul>
 
@@ -252,7 +257,7 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
     <script src="/HungryPaws/assets/vendor/flot/jquery.flot.resize.js"></script>
     <script src="/HungryPaws/assets/vendor/flot.tooltip/jquery.flot.tooltip.js"></script>
 
-    <script src="/HungryPaws/assets/js/profile.js"></script>
+    <script src="/HungryPaws/assets/js/branch-profile.js"></script>
 
 
     <?php

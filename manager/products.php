@@ -38,7 +38,7 @@ $products = $fetch->getGlobalProducts();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="product-report"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4"><i
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4"><i
                                                         class="fa-solid fa-file-lines"></i>
                                                     &nbsp;Generate Report</a>
                                             </div>
@@ -54,6 +54,7 @@ $products = $fetch->getGlobalProducts();
                                                         <option value="5">Unit Cost (₱)</option>
                                                         <option value="6">Selling Price (₱)</option>
                                                         <option value="7">Expiry</option>
+                                                        <option value="8">Manufactured</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -95,6 +96,7 @@ $products = $fetch->getGlobalProducts();
                                                 <th>Unit Cost (₱)</th>
                                                 <th>Selling Price (₱)</th>
                                                 <th>Expiry Date</th>
+                                                <th>Manufactured Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -115,7 +117,17 @@ $products = $fetch->getGlobalProducts();
                                                         </td>
                                                         <td><?= htmlspecialchars($product['unit_cost']) ?></td>
                                                         <td><?= htmlspecialchars($product['selling_price']) ?></td>
-                                                        <td><?= htmlspecialchars($product['expiry_date']) ?></td>
+                                                        <td>
+                                                            <?= ($product['manufactured_date'] == '0000-00-00')
+                                                                ? 'None'
+                                                                : htmlspecialchars($product['manufactured_date']) ?>
+                                                        </td>
+
+                                                        <td>
+                                                            <?= ($product['expiry_date'] == '0000-00-00')
+                                                                ? 'None'
+                                                                : htmlspecialchars($product['expiry_date']) ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php else: ?>

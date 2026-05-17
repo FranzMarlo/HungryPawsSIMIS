@@ -39,7 +39,7 @@ $products = $fetch->getCashierProducts($branch_id);
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="add-order"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">+
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">+
                                                     Add Order</a>
                                             </div>
                                             <div class="col-8 col-lg-auto ms-auto ml-auto mb-3 mb-lg-0">
@@ -112,7 +112,8 @@ $products = $fetch->getCashierProducts($branch_id);
                                                             <div
                                                                 class="text-center 
                                                         <?= getStockClass($product['stock_level'], $product['reorder_point']) ?>">
-                                                                <?= htmlspecialchars($product['stock_level']) ?></div>
+                                                                <?= htmlspecialchars($product['stock_level']) ?>
+                                                            </div>
                                                         </td>
                                                         <td><?= htmlspecialchars($product['unit_cost']) ?></td>
                                                         <td><?= htmlspecialchars($product['selling_price']) ?></td>

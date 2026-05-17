@@ -120,14 +120,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="row action-buttons align-items-start align-items-md-center">
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
                             <a href="#"
-                                class="btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                class="btn dynamic-role-btn btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
                                 id="completeRequestBtn" data-id="<?= htmlspecialchars($requestID) ?>">
                                 <i class="fa-solid fa-check text-4 me-2"></i> Complete Request
                             </a>
                         </div>
                         <div class="col-12 col-md-auto ms-md-auto mt-3 mt-md-0 ms-auto mt-md-1">
                             <a href="transfers"
-                                class="btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
+                                class="btn dynamic-role-btn btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
                                 <i class="fa-solid fa-arrow-left text-4 me-2"></i> Back
                             </a>
                         </div>

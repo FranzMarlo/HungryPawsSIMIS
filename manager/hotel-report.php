@@ -88,7 +88,7 @@ $branches = $fetch->getBranches(); ?>
                                     </div>
 
                                     <div class="col-12 col-lg-3"> <button type="submit"
-                                            class="btn btn-success px-4 text-3">
+                                            class="btn dynamic-role-btn px-4 text-3">
                                             Generate Report
                                         </button>
                                     </div>
@@ -134,9 +134,9 @@ $branches = $fetch->getBranches(); ?>
 
                         </div>
                         <div class="d-grid gap-3 d-md-flex justify-content-md-end me-2">
-                            <button id="btn-print-report" target="_blank" class="btn btn-success ms-3"><i
+                            <button id="btn-print-report" target="_blank" class="btn dynamic-role-btn ms-3"><i
                                     class="fas fa-print"></i> Print</button>
-                            <a href="pet-hotel" class="btn btn-primary ms-3"><i class="fas fa-arrow-left"></i>
+                            <a href="pet-hotel" class="btn dynamic-role-btn ms-3"><i class="fas fa-arrow-left"></i>
                                 Back</a>
 
                         </div>

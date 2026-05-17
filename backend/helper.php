@@ -522,6 +522,26 @@ class helperFunctions extends db_connect
         return $query->get_result()->fetch_assoc();
     }
 
+    public function getUsedBranchColors()
+    {
+        $query = $this->conn->prepare("
+        SELECT branch_color 
+        FROM branch
+    ");
+
+        $query->execute();
+
+        $result = $query->get_result();
+
+        $colors = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $colors[] = $row['branch_color'];
+        }
+
+        return $colors;
+    }
+
     public function getBranchDetails($branch_id)
     {
         $query = $this->conn->prepare(

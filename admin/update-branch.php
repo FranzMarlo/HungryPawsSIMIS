@@ -63,8 +63,9 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                     Address</label>
                                                 <div class="col-lg-7 col-xl-6">
                                                     <input type="text" class="form-control form-control-modern"
-                                                        id="address" name="address" value="<?= htmlspecialchars($branchDetail['address']) ?>"
-                                                        placeholder="<?= htmlspecialchars($branchDetail['address']) ?>"/>
+                                                        id="address" name="address"
+                                                        value="<?= htmlspecialchars($branchDetail['address']) ?>"
+                                                        placeholder="<?= htmlspecialchars($branchDetail['address']) ?>" />
                                                 </div>
                                             </div>
 
@@ -80,7 +81,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                 </div>
                                             </div>
 
-                                            <input type="hidden" name="branchId" value="<?= htmlspecialchars($branchID) ?>">
+                                            <input type="hidden" name="branchId"
+                                                value="<?= htmlspecialchars($branchID) ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -90,14 +92,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="row action-buttons">
                         <div class="col-12 col-md-auto">
                             <button type="submit"
-                                class="submit-button btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                class="submit-button btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
                                 data-loading-text="Loading...">
                                 <i class="bx bx-save text-4 me-2"></i> Update Branch
                             </button>
                         </div>
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
                             <a href="branches"
-                                class="cancel-button btn btn-light btn-px-4 py-3 border font-weight-semibold text-color-dark text-3">Cancel</a>
+                                class="cancel-button btn btn-danger btn-px-4 py-3 border font-weight-semibold text-color-white text-3">Cancel</a>
                         </div>
                     </div>
                 </form>

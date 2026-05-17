@@ -84,4 +84,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
     <!-- Head Libs -->
     <script src="/HungryPaws/assets/vendor/modernizr/modernizr.js"></script>
 
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/style.php';
+    ?>
+
 </head>

@@ -39,7 +39,7 @@ $orders = $fetch->getGlobalOrders();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="order-report"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4"><i
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4"><i
                                                         class="fa-solid fa-file-lines"></i>
                                                     &nbsp;Generate Report</a>
                                             </div>
@@ -116,10 +116,11 @@ $orders = $fetch->getGlobalOrders();
                                                             </span></td>
                                                         <td>
                                                             <a href="receipt?id=<?= urlencode($order['order_id']) ?>"
-                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
                                                                     class="fa-solid fa-eye"></i></a>
                                                             <a href="print-receipt?id=<?= urlencode($order['order_id']) ?>"
-                                                                target="_blank" class="mb-1 mt-1 me-1 btn btn-xs btn-primary"><i
+                                                                target="_blank"
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
                                                                     class="fa-solid fa-print"></i></a>
                                                         </td>
                                                     </tr>

@@ -4,6 +4,13 @@ include 'fetch-class.php';
 
 header('Content-Type: application/json');
 
+$roleColors = [
+    'manager' => '#EC4899',
+    'inventory staff' => '#3B82F6',
+    'cashier' => '#38BDF8',
+    'admin' => '#6B7280',
+];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $role = $_POST['role'];
     if ($role === 'Inventory Staff' || $role === 'Manager') {
@@ -48,6 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['last_name'] = $last_name;
                 $_SESSION['email'] = $email;
                 $_SESSION['image'] = $image;
+                $roleKey = strtolower(trim($role));
+                $roleColor = $roleColors[$roleKey] ?? '#6B7280';
+                $_SESSION['role_color'] = $roleColor;
 
                 echo json_encode(["status" => "success", "message" => "Login successful"]);
                 exit();
@@ -92,6 +102,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit();
                 }
 
+                $branchStmt = $conn->prepare("
+                    SELECT branch_color 
+                    FROM branch 
+                    WHERE branch_id = ?
+                ");
+
+                $branchStmt->bind_param("s", $branch_id);
+
+                $branchStmt->execute();
+
+                $branchStmt->bind_result($branch_color);
+
+                $branchStmt->fetch();
+
+                $branchStmt->close();
+
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['branch_id'] = $branch_id;
                 $_SESSION['username'] = $username;
@@ -100,6 +126,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['last_name'] = $last_name;
                 $_SESSION['email'] = $email;
                 $_SESSION['image'] = $image;
+                $_SESSION['branch_color'] = $branch_color;
+                $roleKey = strtolower(trim($role));
+                $roleColor = $roleColors[$roleKey] ?? '#6B7280';
+                $_SESSION['role_color'] = $roleColor;
 
                 echo json_encode(["status" => "success", "message" => "Login successful"]);
                 exit();

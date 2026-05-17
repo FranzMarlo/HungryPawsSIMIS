@@ -454,7 +454,8 @@ class fetchClass extends db_connect
                     p.unit_cost,
                     p.selling_price,
                     s.supplier_name,
-                    i.expiry_date
+                    i.expiry_date,
+                    i.manufactured_date
                 FROM product AS p
                 INNER JOIN supplier AS s 
                     ON p.supplier_id = s.supplier_id
@@ -825,7 +826,9 @@ class fetchClass extends db_connect
                     i.expiry_date,
                     i.manufactured_date,
                     i.branch_id,
-                    b.branch_name
+                    b.branch_name,
+                    p.unit_cost,
+                    p.selling_price
                 FROM inventory AS i
                 INNER JOIN product AS p
                     ON p.product_id = i.product_id
@@ -2814,6 +2817,75 @@ class fetchClass extends db_connect
         return $data;
     }
 
+    public function getGlobalBranchOrdersByMonth()
+    {
+        $sql = "
+        SELECT
+            YEAR(order_date) AS year,
+            MONTH(order_date) AS month,
+            COUNT(*) AS order_count
+        FROM SALE_ORDER
+        WHERE order_date >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)
+        GROUP BY YEAR(order_date), MONTH(order_date)
+        ORDER BY YEAR(order_date), MONTH(order_date)
+    ";
+
+        $query = $this->conn->prepare($sql);
+        $query->execute();
+        $result = $query->get_result();
+
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $year = $row["year"];
+            $month = $row["month"];
+            $count = $row["order_count"];
+
+            if (!isset($data[$year])) {
+                $data[$year] = array_fill(1, 12, 0); // months 1–12
+            }
+
+            $data[$year][$month] = (int) $count;
+        }
+
+        return $data;
+    }
+    public function getLocalBranchOrdersByMonth($branch_id)
+    {
+        $sql = "
+        SELECT
+            YEAR(order_date) AS year,
+            MONTH(order_date) AS month,
+            COUNT(*) AS order_count
+        FROM SALE_ORDER
+        WHERE branch_id = ?
+        AND order_date >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)
+        GROUP BY YEAR(order_date), MONTH(order_date)
+        ORDER BY YEAR(order_date), MONTH(order_date)
+    ";
+
+        $query = $this->conn->prepare($sql);
+        $query->bind_param("s", $branch_id);
+        $query->execute();
+        $result = $query->get_result();
+
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $year = $row["year"];
+            $month = $row["month"];
+            $count = $row["order_count"];
+
+            if (!isset($data[$year])) {
+                $data[$year] = array_fill(1, 12, 0); // months 1–12
+            }
+
+            $data[$year][$month] = (int) $count;
+        }
+
+        return $data;
+    }
+
     public function getGlobalOrdersByMonth($user_id)
     {
         $sql = "
@@ -2883,6 +2955,181 @@ class fetchClass extends db_connect
             "total_orders" => $orderData['total_orders'],
             "total_amount" => $orderData['total_amount'] ?? '0.00',
             "total_grooming" => $groomingData['total_grooming']
+        ];
+
+    }
+
+
+    public function getAdminSaleStats($branch_id)
+    {
+        $sql = "
+        SELECT
+            COUNT(order_id) AS total_orders,
+            SUM(total_amount) AS total_amount
+        FROM sale_order
+        WHERE branch_id = ?
+    ";
+
+        $query = $this->conn->prepare($sql);
+        $query->bind_param("s", $branch_id);
+        $query->execute();
+        $orderData = $query->get_result()->fetch_assoc();
+
+        $sql2 = "
+        SELECT
+            COUNT(user_id) AS total_cashier
+        FROM user
+        WHERE branch_id = ?
+        AND role = 'Cashier'
+    ";
+
+        $query2 = $this->conn->prepare($sql2);
+        $query2->bind_param("s", $branch_id);
+        $query2->execute();
+        $cashierData = $query2->get_result()->fetch_assoc();
+
+        $sql3 = "
+        SELECT
+            COUNT(product_id) AS total_products
+        FROM product
+    ";
+
+        $query3 = $this->conn->prepare($sql3);
+        $query3->execute();
+        $productData = $query3->get_result()->fetch_assoc();
+
+        return [
+            "status" => "success",
+            "total_orders" => $orderData['total_orders'],
+            "total_amount" => $orderData['total_amount'] ?? '0.00',
+            "total_cashier" => $cashierData['total_cashier'],
+            "total_products" => $productData['total_products']
+        ];
+
+    }
+
+    public function getGlobalBranchStats()
+    {
+        $sql = "
+        SELECT
+            COUNT(order_id) AS total_orders,
+            SUM(total_amount) AS total_amount
+        FROM sale_order
+    ";
+
+        $query = $this->conn->prepare($sql);
+        $query->execute();
+        $orderData = $query->get_result()->fetch_assoc();
+
+        $sql2 = "
+        SELECT
+            COUNT(transfer_id) AS total_completed
+        FROM stock_transfer
+        WHERE status = 'Completed'
+    ";
+
+        $query2 = $this->conn->prepare($sql2);
+        $query2->execute();
+        $completeData = $query2->get_result()->fetch_assoc();
+
+        $sql3 = "
+        SELECT
+            COUNT(transfer_id) AS total_approved
+        FROM stock_transfer
+        WHERE status = 'Approved'
+    ";
+
+        $query3 = $this->conn->prepare($sql3);
+        $query3->execute();
+        $approvedData = $query3->get_result()->fetch_assoc();
+
+        $sql4 = "
+        SELECT
+            COUNT(transfer_id) AS total_requested
+        FROM stock_transfer
+        WHERE status = 'Requested'
+    ";
+
+        $query4 = $this->conn->prepare($sql4);
+        $query4->execute();
+        $requestedData = $query4->get_result()->fetch_assoc();
+
+        return [
+            "status" => "success",
+            "total_orders" => $orderData['total_orders'],
+            "total_amount" => $orderData['total_amount'] ?? '0.00',
+            "total_completed" => $completeData['total_completed'],
+            "total_approved" => $approvedData['total_approved'],
+            "total_requested" => $requestedData['total_requested']
+        ];
+
+    }
+
+    public function getStaffBranchStats()
+    {
+        $sql = "
+        SELECT
+            COUNT(order_id) AS total_orders,
+            SUM(total_amount) AS total_amount
+        FROM sale_order
+    ";
+
+        $query = $this->conn->prepare($sql);
+        $query->execute();
+        $orderData = $query->get_result()->fetch_assoc();
+
+        $sql2 = "
+        SELECT
+            COUNT(product_id) AS total_products
+        FROM product
+    ";
+
+        $query2 = $this->conn->prepare($sql2);
+        $query2->execute();
+        $productData = $query2->get_result()->fetch_assoc();
+
+        $sql3 = "
+        SELECT
+            COUNT(inventory_id) AS total_inventory
+        FROM inventory
+        WHERE stock_level > 0
+    ";
+
+        $query3 = $this->conn->prepare($sql3);
+        $query3->execute();
+        $inventoryData = $query3->get_result()->fetch_assoc();
+
+        $sql4 = "
+        SELECT
+            COUNT(transfer_id) AS total_requested
+        FROM stock_transfer
+        WHERE status = 'Requested'
+    ";
+
+        $query4 = $this->conn->prepare($sql4);
+        $query4->execute();
+        $requestedData = $query4->get_result()->fetch_assoc();
+
+
+        $sql5 = "
+        SELECT
+            COUNT(inventory_id) AS total_stock
+        FROM inventory
+        WHERE stock_level > reorder_point
+    ";
+
+        $query5 = $this->conn->prepare($sql5);
+        $query5->execute();
+        $stockData = $query5->get_result()->fetch_assoc();
+
+        return [
+            "status" => "success",
+            "total_orders" => $orderData['total_orders'],
+            "total_amount" => $orderData['total_amount'] ?? '0.00',
+            "total_requested" => $requestedData['total_requested'],
+            "total_products" => $productData['total_products'],
+            "total_inventory" => $inventoryData['total_inventory'],
+            "total_stock" => $stockData['total_stock']
         ];
 
     }

@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const roleColor =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue("--role-color")
+      .trim() || "#6B7280";
+
   fetch("/HungryPaws/backend/handle-fetch.php", {
     method: "POST",
     body: new URLSearchParams({
@@ -22,7 +27,10 @@ document.addEventListener("DOMContentLoaded", function () {
         xkey: "y",
         ykeys: ["a"],
         labels: ["Revenue"],
-        barColors: ["#28a745"],
+
+        // 👇 dynamic role color
+        barColors: [roleColor],
+
         hideHover: "auto",
         resize: true,
       });

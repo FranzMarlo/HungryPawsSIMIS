@@ -42,7 +42,7 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                                         <span
                                             class="thumb-info-inner"><?= htmlspecialchars($first_name), ' ', htmlspecialchars($last_name); ?></span>
                                         <span
-                                            class="thumb-info-type text-uppercase"><?= htmlspecialchars($role); ?></span>
+                                            class="thumb-info-type dynamic-role-theme text-uppercase"><?= htmlspecialchars($role); ?></span>
                                     </div>
                                 </div>
 
@@ -51,42 +51,40 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
                                 <ul class="list-group">
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">First Name</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">First Name</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($first_name); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Last Name</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Last Name</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($last_name); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Role</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Role</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($role); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Branch</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Branch</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($branchDetail['branch_name']); ?>
                                         </p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">User ID</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">User ID</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($user_id); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Username</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Username</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($username); ?></p>
                                     </li>
 
                                     <li class="list-group-item">
-                                        <p class="text-primary font-weight-bold mb-1">Email</p>
+                                        <p class="dynamic-role-text font-weight-bold mb-1">Email</p>
                                         <p class="text-dark mb-0"><?= htmlspecialchars($email); ?></p>
                                     </li>
-
-
 
                                 </ul>
 
@@ -190,15 +188,15 @@ $saleStats = $fetch->getSaleStats($branch_id, $user_id);
 
                         <h4 class="mb-3 mt-0 font-weight-semibold text-dark">Sale Stats</h4>
                         <ul class="simple-card-list mb-3">
-                            <li class="primary">
+                            <li class="primary dynamic-role-theme">
                                 <h3><?= htmlspecialchars($saleStats['total_orders']) ?></h3>
                                 <p class="text-light">Total Orders Processed</p>
                             </li>
-                            <li class="primary">
+                            <li class="primary dynamic-role-theme">
                                 <h3><?= htmlspecialchars('₱' . number_format($saleStats['total_amount'], 2)) ?></h3>
                                 <p class="text-light">Total Value Processed.</p>
                             </li>
-                            <li class="primary">
+                            <li class="primary dynamic-role-theme">
                                 <h3><?= htmlspecialchars($saleStats['total_grooming']) ?></h3>
                                 <p class="text-light">Total Pets Groomed</p>
                             </li>

@@ -39,7 +39,7 @@ $users = $fetch->getUsers();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="add-user"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">
                                                     <i class="fa-solid fa-user"></i>
                                                     &nbsp;Add User</a>
                                             </div>
@@ -122,7 +122,7 @@ $users = $fetch->getUsers();
                                                         </td>
                                                         <td class="text-center">
                                                             <a href="update-user?id=<?= urlencode($user['user_id']) ?>"
-                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
                                                                     class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>

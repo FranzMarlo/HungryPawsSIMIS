@@ -294,7 +294,7 @@ $groomers = $fetch->getGroomerList($branch_id);
                     <div class="row action-buttons align-items-start align-items-md-center">
                         <div class="col-12 col-md-auto">
                             <a href="#modalForm"
-                                class="modal-with-form btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
+                                class="modal-with-form btn dynamic-role-btn btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
                                 <i class="bx bx-plus text-4 me-2"></i> Add Product
                             </a>
                         </div>

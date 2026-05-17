@@ -156,7 +156,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="row action-buttons">
                         <div class="col-12 col-md-auto">
                             <button type="submit"
-                                class="submit-button btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                class="submit-button btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
                                 data-loading-text="Loading...">
                                 <i class="bx bx-save text-4 me-2"></i> Update User Info
                             </button>

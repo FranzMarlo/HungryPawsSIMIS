@@ -2,7 +2,7 @@
   if (!$("#orderLine").length) return;
 
   $.ajax({
-    url: "/HungryPaws/backend/get-orders-by-month.php",
+    url: "/HungryPaws/backend/global-orders-by-month.php",
     type: "GET",
     dataType: "json",
     success: function (response) {

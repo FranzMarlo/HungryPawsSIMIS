@@ -39,7 +39,7 @@ $categories = $fetch->getAdminCategories();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="add-category"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">
                                                     <i class="fa-solid fa-layer-group"></i>
                                                     &nbsp;Add Category</a>
                                             </div>
@@ -96,7 +96,8 @@ $categories = $fetch->getAdminCategories();
                                                         <td><?= htmlspecialchars($category['category_id']) ?></td>
                                                         <td><?= htmlspecialchars($category['category']) ?></td>
                                                         <td class="text-center">
-                                                            <a href="update-category?id=<?= urlencode($category['category_id']) ?>" class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                            <a href="update-category?id=<?= urlencode($category['category_id']) ?>"
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
                                                                     class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>

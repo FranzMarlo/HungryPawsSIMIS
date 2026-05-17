@@ -39,7 +39,7 @@ $requests = $fetch->getStockRequests();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="stock-transfer"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">
                                                     <i class="fa-solid fa-arrow-trend-up me-1"></i>
                                                     Request Transfer</a>
                                             </div>
@@ -119,7 +119,7 @@ $requests = $fetch->getStockRequests();
                                                             </span></td>
                                                         <td>
                                                             <a href="update-request?id=<?= urlencode($request['transfer_id']) ?>"
-                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
                                                                     class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>

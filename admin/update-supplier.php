@@ -86,7 +86,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         maxlength="13" />
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="supplierId" value="<?= htmlspecialchars($supplierID) ?>">
+                                            <input type="hidden" name="supplierId"
+                                                value="<?= htmlspecialchars($supplierID) ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -96,14 +97,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="row action-buttons">
                         <div class="col-12 col-md-auto">
                             <button type="submit"
-                                class="submit-button btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                class="submit-button btn btn-success btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
                                 data-loading-text="Loading...">
                                 <i class="bx bx-save text-4 me-2"></i> Update Supplier
                             </button>
                         </div>
                         <div class="col-12 col-md-auto px-md-0 mt-3 mt-md-0">
                             <a href="suppliers"
-                                class="cancel-button btn btn-light btn-px-4 py-3 border font-weight-semibold text-color-dark text-3">Cancel</a>
+                                class="cancel-button btn btn-danger btn-px-4 py-3 border font-weight-semibold text-color-white text-3">Cancel</a>
                         </div>
                     </div>
                 </form>

@@ -1,7 +1,7 @@
 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
 <!-- start: header -->
 <header class="header header-nav-menu header-nav-links">
-    <div class="logo-container">
+    <div class="logo-container dynamic-role-theme">
         <a href="dashboard" class="logo">
 
             <img src="/HungryPaws/assets/img/logo-banner.png" class="logo-image" width="150" height="35"
@@ -40,12 +40,14 @@
                                 Stock Transfer Requests
                             </a>
                         </li>
-                        <li class="<?= ($current_page == 'pet-grooming.php' || $current_page == 'grooming-report.php') ? 'active' : '' ?>">
+                        <li
+                            class="<?= ($current_page == 'pet-grooming.php' || $current_page == 'grooming-report.php') ? 'active' : '' ?>">
                             <a class="nav-link" href="pet-grooming">
                                 Pet Grooming Records
                             </a>
                         </li>
-                        <li class="<?= ($current_page == 'pet-hotel.php' || $current_page == 'hotel-report.php') ? 'active' : '' ?>">
+                        <li
+                            class="<?= ($current_page == 'pet-hotel.php' || $current_page == 'hotel-report.php') ? 'active' : '' ?>">
                             <a class="nav-link" href="pet-hotel">
                                 Pet Hotel Records
                             </a>

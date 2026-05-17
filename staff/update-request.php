@@ -10,7 +10,7 @@ $branchList = $fetch->getBranches();
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $requestID = $_GET['id'];
     $requestInfo = $fetch->getRequestInfo($requestID);
-    $products = $fetch->getStaffProductsByBranch($requestInfo['sending_id']);
+    $products = $fetch->getStaffProductsByBranch($requestInfo['sending_branch_id']);
 } else {
     header("Location: /hungrypaws/staff/transfers");
     exit;
@@ -58,7 +58,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         <option value="<?= htmlspecialchars($item['branch_id']) ?>"
                                                             data-address="<?= htmlspecialchars($item['address']) ?>"
                                                             data-contact="<?= htmlspecialchars($item['contact_number']) ?>"
-                                                            <?= ($item['branch_id'] === $requestInfo['sending_id']) ? 'selected' : '' ?>>
+                                                            <?= ($item['branch_id'] === $requestInfo['sending_branch_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($item['branch_name']) ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -119,7 +119,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                                         <option value="<?= htmlspecialchars($item['branch_id']) ?>"
                                                             data-address="<?= htmlspecialchars($item['address']) ?>"
                                                             data-contact="<?= htmlspecialchars($item['contact_number']) ?>"
-                                                            <?= ($item['branch_id'] === $requestInfo['receiving_id']) ? 'selected' : '' ?>>
+                                                            <?= ($item['branch_id'] === $requestInfo['receiving_branch_id']) ? 'selected' : '' ?>>
                                                             <?= htmlspecialchars($item['branch_name']) ?>
                                                         </option>
                                                     <?php endforeach; ?>
@@ -216,7 +216,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <div class="row action-buttons align-items-start align-items-md-center">
                         <div class="col-12 col-md-auto">
                             <button type="submit"
-                                class="submit-button btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
+                                class="submit-button btn dynamic-role-btn btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1"
                                 data-loading-text="Loading...">
                                 <i class="fa-solid fa-floppy-disk text-4 me-2"></i> Update Request
                             </button>
@@ -230,7 +230,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                         </div>
                         <div class="col-12 col-md-auto ms-md-auto mt-3 mt-md-0 ms-auto mt-md-1">
                             <a href="transfers"
-                                class="btn btn-primary btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
+                                class="btn dynamic-role-btn btn-px-4 py-3 d-flex align-items-center font-weight-semibold line-height-1">
                                 <i class="fa-solid fa-arrow-left text-4 me-2"></i> Back
                             </a>
                         </div>

@@ -39,7 +39,7 @@ $products = $fetch->getInventoryProducts();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="add-inventory"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">
                                                     <i class="fa-solid fa-arrow-trend-up me-1"></i>
                                                     Add Inventory</a>
                                             </div>
@@ -121,11 +121,11 @@ $products = $fetch->getInventoryProducts();
                                                         </td>
                                                         <td><?= htmlspecialchars($product['supplier_name']) ?></td>
                                                         <td>
-    <?= ($product['manufactured_date'] == '0000-00-00')
+                                                            <?= ($product['manufactured_date'] == '0000-00-00')
                                                                 ? 'None'
                                                                 : htmlspecialchars($product['manufactured_date']) ?>
                                                         </td>
-                                                        
+
                                                         <td>
                                                             <?= ($product['expiry_date'] == '0000-00-00')
                                                                 ? 'None'
@@ -133,7 +133,7 @@ $products = $fetch->getInventoryProducts();
                                                         </td>
                                                         <td>
                                                             <a href="update-inventory?id=<?= urlencode($product['inventory_id']) ?>"
-                                                                class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
+                                                                class="mb-1 mt-1 me-1 btn dynamic-role-btn btn-xs"><i
                                                                     class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>

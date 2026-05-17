@@ -65,3 +65,25 @@
   height: 4rem;
   width: 6rem;
 }
+
+.dynamic-role-theme {
+  background: var(--role-color) !important;
+}
+
+.dynamic-role-btn {
+  background: var(--role-color) !important;
+  color: #fff !important;
+}
+
+.dynamic-role-text {
+  color: var(--role-color) !important;
+}
+
+.dynamic-role-btn:hover {
+  filter: brightness(0.9);
+  transition: 0.2s ease;
+}
+
+.dynamic-text-role-theme {
+  color: var(--role-color) !important;
+}

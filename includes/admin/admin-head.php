@@ -65,7 +65,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/dropzone/dropzone.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/bootstrap-markdown/css/bootstrap-markdown.min.css" />
     <link rel="stylesheet" href="/HungryPaws/assets/vendor/summernote/summernote-bs4.css" />
-    
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
@@ -85,5 +85,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
 
     <!-- Head Libs -->
     <script src="/HungryPaws/assets/vendor/modernizr/modernizr.js"></script>
+
+    <?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/style.php';
+    ?>
 
 </head>

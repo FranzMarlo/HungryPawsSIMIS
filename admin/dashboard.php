@@ -106,7 +106,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                             </div>
                                             <div class="col-md-4 text-start text-md-right pe-md-4 mt-4 mt-md-0">
                                                 <i
-                                                    class="bx bx-cart-alt icon icon-inline icon-xl bg-primary rounded-circle text-color-light"></i>
+                                                    class="bx bx-cart-alt icon icon-inline icon-xl dynamic-role-theme rounded-circle text-color-light"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -125,7 +125,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
 
                                             <div class="col-12 col-md-4 text-start text-md-right pe-md-4 mt-4 mt-md-0">
                                                 <i
-                                                    class="bx bx-purchase-tag-alt icon icon-inline icon-xl bg-primary rounded-circle text-color-light pe-0"></i>
+                                                    class="bx bx-purchase-tag-alt icon icon-inline icon-xl dynamic-role-theme rounded-circle text-color-light pe-0"></i>
                                             </div>
                                         </div>
 
@@ -195,7 +195,7 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                     </div>
                                     <div class="col-md-4 text-start text-md-right pe-md-4 mt-4 mt-md-0">
                                         <i
-                                            class="bx bx-user icon icon-inline icon-xl bg-primary rounded-circle text-color-light"></i>
+                                            class="bx bx-user icon icon-inline icon-xl dynamic-role-theme rounded-circle text-color-light"></i>
                                     </div>
                                 </div>
                             </div>
@@ -210,15 +210,15 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                             <div class="card-body">
                                 <div class="d-flex flex-column gap-3">
                                     <a href="products"
-                                        class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4"><i
+                                        class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4"><i
                                             class="fa-solid fa-coins"></i>
                                         &nbsp;View Products</a>
                                     <a href="add-product"
-                                        class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4"><i
+                                        class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4"><i
                                             class="fa-solid fa-add"></i>
                                         &nbsp;Add Product</a>
                                     <a href="profile"
-                                        class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4"><i
+                                        class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4"><i
                                             class="fa-solid fa-user"></i>
                                         &nbsp;View Profile</a>
                                 </div>
@@ -249,13 +249,13 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                                 <?php foreach ($products as $product): ?>
                                                     <tr>
                                                         <td width="72"><span
-                                                                class="badge bg-primary rounded-circle d-inline-flex justify-content-center align-items-center text-4"
+                                                                class="badge dynamic-role-theme rounded-circle d-inline-flex justify-content-center align-items-center text-4"
                                                                 style="width: 40px; height: 40px;">
                                                                 <?= intval($productPos++) ?>
                                                             </span>
                                                         </td>
                                                         <td><a href="update-product?id=<?= urlencode($product['product_id']) ?>"
-                                                                class="font-weight-semibold"><?= $product['product_name'] ?></a>
+                                                                class="font-weight-semibold dynamic-role-text"><?= $product['product_name'] ?></a>
                                                         </td>
                                                         <td width="90">₱<?= $product['selling_price'] ?></td>
                                                     </tr>
@@ -297,13 +297,13 @@ $orderTrend = getPrevOrderClass($orderRecord['recent'], $orderRecord['previous']
                                                 <?php foreach ($expensives as $expensive): ?>
                                                     <tr>
                                                         <td width="72"><span
-                                                                class="badge bg-primary rounded-circle d-inline-flex justify-content-center align-items-center text-4"
+                                                                class="badge dynamic-role-theme rounded-circle d-inline-flex justify-content-center align-items-center text-4"
                                                                 style="width: 40px; height: 40px;">
                                                                 <?= intval($expensivePos++) ?>
                                                             </span>
                                                         </td>
                                                         <td><a href="update-product?id=<?= urlencode($expensive['product_id']) ?>"
-                                                                class="font-weight-semibold"><?= $expensive['product_name'] ?></a>
+                                                                class="font-weight-semibold dynamic-role-text"><?= $expensive['product_name'] ?></a>
                                                         </td>
                                                         <td width="90">₱<?= $expensive['selling_price'] ?></td>
                                                     </tr>

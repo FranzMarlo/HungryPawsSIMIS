@@ -39,7 +39,7 @@ $branches = $fetch->getBranches();
                                         <div class="row align-items-center mb-3">
                                             <div class="col-12 col-lg-auto mb-3 mb-lg-0">
                                                 <a href="add-branch"
-                                                    class="btn btn-primary btn-md font-weight-semibold btn-py-2 px-4">
+                                                    class="btn dynamic-role-btn btn-md font-weight-semibold btn-py-2 px-4">
                                                     <i class="fa-solid fa-store"></i>
                                                     &nbsp;Add Branch</a>
                                             </div>
@@ -93,23 +93,25 @@ $branches = $fetch->getBranches();
                                         </thead>
                                         <tbody>
                                             <?php if (!empty($branches)): ?>
-                                                    <?php foreach ($branches as $branch): ?>
-                                                            <tr>
-                                                                <td><strong><?= htmlspecialchars($branch['branch_name']) ?></strong></td>
-                                                                <td><?= htmlspecialchars($branch['address']) ?></td>
-                                                                <td><?= htmlspecialchars($branch['contact_number']) ?></td>
-                                                                <td class="text-center">
-                                                                    <a href="update-branch?id=<?= urlencode($branch['branch_id']) ?>" class="mb-1 mt-1 me-1 btn btn-xs btn-success"><i
-                                                                            class="fa-solid fa-pen-to-square"></i></a>
-                                                                </td>
-                                                            </tr>
-                                                    <?php endforeach; ?>
-                                            <?php else: ?>
+                                                <?php foreach ($branches as $branch): ?>
                                                     <tr>
-                                                        <td colspan="2" class="text-center">
-                                                            No branches found
+                                                        <td><strong><?= htmlspecialchars($branch['branch_name']) ?></strong>
+                                                        </td>
+                                                        <td><?= htmlspecialchars($branch['address']) ?></td>
+                                                        <td><?= htmlspecialchars($branch['contact_number']) ?></td>
+                                                        <td class="text-center">
+                                                            <a href="update-branch?id=<?= urlencode($branch['branch_id']) ?>"
+                                                                class="mb-1 mt-1 me-1 btn btn-xs dynamic-role-btn"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
                                                         </td>
                                                     </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="2" class="text-center">
+                                                        No branches found
+                                                    </td>
+                                                </tr>
                                             <?php endif; ?>
                                         </tbody>
                                     </table>

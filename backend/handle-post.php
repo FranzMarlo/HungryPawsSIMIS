@@ -1644,8 +1644,36 @@ switch ($submitType) {
             $fullAddress = "$street, $barangay, $city, $province, $country";
         }
 
+        $branchColors = [
+            '#4F8CFF', // Bright Blue
+            '#EC4899', // Hot Pink
+            '#8B5CF6', // Purple
+            '#38BDF8', // Sky Blue
+            '#FB7185', // Rose Pink
+            '#C084FC'  // Soft Violet
+        ];
+
+        // get used colors
+        $usedColors = $helper->getUsedBranchColors();
+
+        // remove used colors
+        $availableColors = array_diff($branchColors, $usedColors);
+
+        // fallback if all colors used
+        if (empty($availableColors)) {
+            $availableColors = $branchColors;
+        }
+
+        // pick random available color
+        $branchColor = $availableColors[array_rand($availableColors)];
+
         $post = new postClass();
-        $response = $post->addBranch($branchName, $fullAddress, $contactNumber);
+        $response = $post->addBranch(
+            $branchName,
+            $fullAddress,
+            $contactNumber,
+            $branchColor
+        );
 
         echo json_encode($response);
         break;

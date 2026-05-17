@@ -1,7 +1,7 @@
 <?php $current_page = basename($_SERVER['PHP_SELF']); ?>
 <!-- start: header -->
 <header class="header header-nav-menu header-nav-links">
-    <div class="logo-container">
+    <div class="logo-container dynamic-role-theme">
         <a href="dashboard" class="logo">
 
             <img src="/HungryPaws/assets/img/logo-banner.png" class="logo-image" width="150" height="35"
@@ -22,7 +22,8 @@
                                 Dashboard
                             </a>
                         </li>
-                        <li class="dropdown <?= ($current_page == 'users.php' || $current_page == 'add-user.php' || $current_page == 'update-user.php') ? 'active' : '' ?>">
+                        <li
+                            class="dropdown <?= ($current_page == 'users.php' || $current_page == 'add-user.php' || $current_page == 'update-user.php') ? 'active' : '' ?>">
                             <a class="nav-link dropdown-toggle" href="#">
                                 Users
                             </a>
@@ -58,7 +59,7 @@
                             </ul>
                         </li>
                         <li class="dropdown <?= ($current_page == 'products.php' || $current_page == 'add-product.php'
-                        || $current_page == 'update-product.php') ? 'active' : '' ?>">
+                            || $current_page == 'update-product.php') ? 'active' : '' ?>">
                             <a class="nav-link dropdown-toggle" href="#">
                                 Products
                             </a>
@@ -75,7 +76,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="dropdown <?= ($current_page == 'suppliers.php' || $current_page == 'add-supplier.php' || $current_page == 'update-supplier.php') ? 'active' : '' ?>">
+                        <li
+                            class="dropdown <?= ($current_page == 'suppliers.php' || $current_page == 'add-supplier.php' || $current_page == 'update-supplier.php') ? 'active' : '' ?>">
                             <a class="nav-link dropdown-toggle" href="#">
                                 Supplier
                             </a>
@@ -92,7 +94,8 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="dropdown <?= ($current_page == 'category.php' || $current_page == 'add-category.php' || $current_page == 'update-category.php') ? 'active' : '' ?>">
+                        <li
+                            class="dropdown <?= ($current_page == 'category.php' || $current_page == 'add-category.php' || $current_page == 'update-category.php') ? 'active' : '' ?>">
                             <a class="nav-link dropdown-toggle" href="#">
                                 Product Category
                             </a>
