@@ -398,10 +398,35 @@ class helperFunctions extends db_connect
         return $result->num_rows > 1;
     }
 
+    public function reCheckEmailMain($email)
+    {
+        $query = $this->conn->prepare(
+            "SELECT user_id FROM main WHERE email = ? LIMIT 2"
+        );
+
+        $query->bind_param('s', $email);
+        $query->execute();
+        $result = $query->get_result();
+
+        return $result->num_rows > 1;
+    }
+
     public function reCheckUsername($username)
     {
         $query = $this->conn->prepare(
             "SELECT user_id FROM user WHERE username = ? LIMIT 2"
+        );
+        $query->bind_param('s', $username);
+        $query->execute();
+        $result = $query->get_result();
+
+        return $result->num_rows > 1;
+    }
+
+    public function reCheckUsernameMain($username)
+    {
+        $query = $this->conn->prepare(
+            "SELECT user_id FROM main WHERE username = ? LIMIT 2"
         );
         $query->bind_param('s', $username);
         $query->execute();
@@ -441,6 +466,22 @@ class helperFunctions extends db_connect
                 FROM user u
                 INNER JOIN branch b
                 ON u.branch_id = b.branch_id
+                WHERE u.user_id = ?;
+                "
+        );
+        $query->bind_param('s', $user_id);
+        $query->execute();
+        return $query->get_result()->fetch_assoc();
+    }
+
+    public function getMainUserDetails($user_id)
+    {
+        $query = $this->conn->prepare(
+            "SELECT 
+                    u.user_id, u.username,
+                    u.first_name, u.last_name, 
+                    u.email, u.image
+                FROM main u
                 WHERE u.user_id = ?;
                 "
         );

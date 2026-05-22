@@ -7,7 +7,7 @@ $title = "Dashboard | Hungry Paws";
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/staff/staff-head.php';
 
 $fetch = new fetchClass();
-$requestCount = $fetch->getGlobalRequestCount();
+$requestCount = $fetch->getGlobalCompletedRequestCount();
 $productsOnStock = $fetch->getGlobalProductCountOnStock();
 $orderCount = $fetch->getGlobalOrderCount();
 $orderRecord = $fetch->getGlobalOrderTrend();

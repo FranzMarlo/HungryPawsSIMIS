@@ -1422,6 +1422,78 @@ switch ($submitType) {
         echo json_encode($response);
         break;
 
+    case 'updateMainUser':
+        $userId = $_POST['userId'] ?? '';
+        $firstName = ucwords(strtolower($_POST['firstName'] ?? ''));
+        $lastName = ucwords(strtolower($_POST['lastName'] ?? ''));
+        $email = $_POST['email'] ?? '';
+        $username = $_POST['username'] ?? '';
+
+        $userDetail = $helper->getMainUserDetails($userId);
+
+        if (empty($firstName)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter First Name Of User"]);
+            exit;
+        }
+
+        if (empty($lastName)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Last Name Of User"]);
+            exit;
+        }
+
+        if (empty($email)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Email Of User"]);
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter A Valid Email Address"]);
+            exit;
+        }
+
+        $checkEmail = $helper->reCheckEmailMain($email);
+
+        if ($checkEmail) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Email Already In Use By Another Account"]);
+            exit;
+        }
+
+        if (empty($username)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Username For User"]);
+            exit;
+        }
+
+        if (strlen($username) < 4 || strlen($username) > 20) {
+            echo json_encode([
+                "status" => "warning",
+                "title" => "Warning!",
+                "message" => "Username Must Be Between 4 To 20 Characters Long"
+            ]);
+            exit;
+        }
+
+        $checkUsername = $helper->reCheckUsernameMain($username);
+
+        if ($checkUsername) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Username Already In Use By Another Account"]);
+            exit;
+        }
+
+        if (
+            $userDetail['first_name'] == $firstName && $userDetail['last_name'] == $lastName && $userDetail['email'] == $email
+            && $userDetail['username'] == $username
+        ) {
+            echo json_encode(["status" => "info", "title" => "Info", "message" => "No Changes Made"]);
+            exit;
+        }
+
+
+        $post = new postClass();
+        $response = $post->updateMainUser($userId, $username, $firstName, $lastName, $email);
+
+        echo json_encode($response);
+        break;
+
     case 'disableUser':
         $userId = $_POST['userId'];
 

@@ -829,6 +829,28 @@ class postClass extends db_connect
         }
     }
 
+    public function updateMainUser($user_id, $username, $first_name, $last_name, $email)
+    {
+        $sql = "UPDATE main SET username = ?, first_name = ?, last_name = ?, email = ?
+                WHERE user_id = ?";
+        $query = $this->conn->prepare($sql);
+        $query->bind_param("sssss", $username, $first_name, $last_name, $email, $user_id);
+
+        if ($query->execute()) {
+            return [
+                "status" => "success",
+                "title" => "User Details Updated",
+                "message" => "User Details Updated Successfully!"
+            ];
+        } else {
+            return [
+                "status" => "error",
+                "title" => "Error!",
+                "message" => "Failed to update user details: " . $query->error
+            ];
+        }
+    }
+
     public function disableUserAccount($user_id)
     {
         $query = $this->conn->prepare("

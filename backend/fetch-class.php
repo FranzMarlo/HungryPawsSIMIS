@@ -3156,6 +3156,26 @@ class fetchClass extends db_connect
 
     }
 
+
+    public function getMainUsers()
+    {
+
+        $query = $this->conn->prepare(
+            "SELECT 
+                        u.user_id, u.username, u.role, 
+                        u.first_name, u.last_name, 
+                        u.email, u.image,
+                        u.is_disabled AS status
+                    FROM main u
+                    ORDER BY u.last_name ASC
+                    "
+        );
+        $query->execute();
+
+        return $query->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    }
+
     public function getUserDetails($user_id)
     {
         $query = $this->conn->prepare(
@@ -3169,6 +3189,23 @@ class fetchClass extends db_connect
                 FROM user u
                 INNER JOIN branch b
                 ON u.branch_id = b.branch_id
+                WHERE u.user_id = ?;
+                "
+        );
+        $query->bind_param('s', $user_id);
+        $query->execute();
+        return $query->get_result()->fetch_assoc();
+    }
+
+    public function getMainUserDetails($user_id)
+    {
+        $query = $this->conn->prepare(
+            "SELECT 
+                    u.user_id, u.username, u.role, 
+                    u.first_name, u.last_name, 
+                    u.email, u.image,
+                    u.is_disabled AS status
+                FROM main u
                 WHERE u.user_id = ?;
                 "
         );

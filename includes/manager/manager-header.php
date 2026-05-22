@@ -52,6 +52,12 @@
                                 Pet Hotel Records
                             </a>
                         </li>
+                        <li
+                            class="<?= ($current_page == 'main-user.php' || $current_page == 'update-user.php') ? 'active' : '' ?>">
+                            <a class="nav-link" href="main-user">
+                                Main Users
+                            </a>
+                        </li>
                         <li>
                             <a class="nav-link modal-trigger" href="#modalLogoutConfirm">
                                 Logout
