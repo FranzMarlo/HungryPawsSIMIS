@@ -77,7 +77,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/login-head.php';
     <!-- Theme Initialization Files -->
     <script src="/HungryPaws/assets/js/theme.init.js"></script>
 
-    <script src="/HungryPaws/assets/js/forgot-password.js"></script>
+    <script src="/HungryPaws/assets/js/forgot-password-main.js"></script>
 
 </body>
 

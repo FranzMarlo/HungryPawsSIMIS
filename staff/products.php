@@ -140,7 +140,7 @@ $products = $fetch->getInventoryProducts();
                                                 <?php endforeach; ?>
                                             <?php else: ?>
                                                 <tr>
-                                                    <td colspan="6" class="text-center">
+                                                    <td colspan="9" class="text-center">
                                                         No products found
                                                     </td>
                                                 </tr>

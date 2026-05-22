@@ -262,7 +262,7 @@ document
 
     const form = this;
     const formData = new FormData(form);
-    formData.append("submitType", "updatePassword");
+    formData.append("submitType", "updatePasswordMain");
 
     fetch("/HungryPaws/backend/handle-post.php", {
       method: "POST",

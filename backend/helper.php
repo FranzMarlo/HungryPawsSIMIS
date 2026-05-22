@@ -348,6 +348,18 @@ class helperFunctions extends db_connect
         return $result['password'];
     }
 
+    public function getMainCurrentPassword($user_id)
+    {
+        $query = $this->conn->prepare(
+            "SELECT password FROM main WHERE user_id = ?;"
+        );
+        $query->bind_param('s', $user_id);
+        $query->execute();
+        $result = $query->get_result()->fetch_assoc();
+
+        return $result['password'];
+    }
+
     public function checkEmail($email)
     {
         $query = $this->conn->prepare(
@@ -556,6 +568,19 @@ class helperFunctions extends db_connect
     {
         $query = $this->conn->prepare(
             "SELECT user_id, email, username, first_name, last_name FROM user WHERE email = ? LIMIT 1"
+        );
+
+        $query->bind_param("s", $email);
+        $query->execute();
+        $result = $query->get_result();
+        return $result->fetch_assoc();
+    }
+
+
+    public function getMainUserByEmail($email)
+    {
+        $query = $this->conn->prepare(
+            "SELECT user_id, email, username, first_name, last_name FROM main WHERE email = ? LIMIT 1"
         );
 
         $query->bind_param("s", $email);

@@ -744,6 +744,38 @@ class postClass extends db_connect
         }
     }
 
+    public function updatePasswordMain($user_id, $newPassword)
+    {
+        $query = $this->conn->prepare("
+        UPDATE main SET
+        password = ?
+        WHERE user_id = ?;
+        ");
+
+        if (!$query) {
+            return [
+                "status" => "error",
+                "title" => "Database Error",
+                "message" => $this->conn->error
+            ];
+        }
+        $query->bind_param("ss", $newPassword, $user_id);
+
+        if ($query->execute()) {
+            return [
+                "status" => "success",
+                "title" => "Password Updated",
+                "message" => "Password Updated Successfully"
+            ];
+        } else {
+            return [
+                "status" => "error",
+                "title" => "Error!",
+                "message" => "Failed to update password: " . $query->error
+            ];
+        }
+    }
+
     public function updateProfilePhoto($user_id, $filename)
     {
         $sql = "UPDATE user SET image = ? WHERE user_id = ?";
@@ -1123,6 +1155,14 @@ class postClass extends db_connect
     public function updateUserPasswordByEmail($email, $hashedPassword)
     {
         $query = $this->conn->prepare("UPDATE user SET password = ? WHERE email = ?");
+        $query->bind_param("ss", $hashedPassword, $email);
+
+        return $query->execute();
+    }
+
+    public function updateMainUserPasswordByEmail($email, $hashedPassword)
+    {
+        $query = $this->conn->prepare("UPDATE main SET password = ? WHERE email = ?");
         $query->bind_param("ss", $hashedPassword, $email);
 
         return $query->execute();

@@ -25,6 +25,10 @@ $image = $_SESSION['image'];
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/fetch-class.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
+
+$fetch = new fetchClass();
+$branchDetail = $fetch->getBranchDetails($branch_id);
+$branchName = $branchDetail['branch_name'] ?? 'Hungry Paws';
 ?>
 
 <head>

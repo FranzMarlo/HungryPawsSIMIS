@@ -826,7 +826,7 @@ switch ($submitType) {
             }
 
             $inventoryCount = $helper->checkManufacturedInventory($productId, $branchId, $formattedManufacturedDate);
-            if ($inventoryCount > 0) {
+            if ($inventoryCount > 1) {
                 echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "An Inventory For Product With The Same Manufactured Date Already Exists, Please Update It's Product Inventory If You Want To Modify The Stock."]);
                 exit;
             }
@@ -1171,6 +1171,62 @@ switch ($submitType) {
         $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
         $response = $postClass->updatePassword($userId, $newHashedPassword);
+
+        echo json_encode($response);
+        break;
+
+
+
+    case 'updatePasswordMain':
+        $userId = $_POST['userId'] ?? '';
+        $currentPassword = $_POST['currentPassword'] ?? '';
+        $newPassword = $_POST['newPassword'] ?? '';
+        $confirmPassword = $_POST['confirmPassword'] ?? '';
+
+        if (empty($currentPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Current Password"]);
+            exit;
+        }
+
+        if (empty($newPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter New Password"]);
+            exit;
+        }
+
+        if (empty($confirmPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Confirm New Password"]);
+            exit;
+        }
+
+        if (strlen($newPassword) < 6) {
+            echo json_encode([
+                "status" => "warning",
+                "title" => "Warning!",
+                "message" => "Password Must Be At Least 6 Characters Long"
+            ]);
+            exit;
+        }
+
+        if ($confirmPassword !== $newPassword) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "New Password and Confirm Password Does Not Match, Please Try Again"]);
+            exit;
+        }
+
+        $hashedPassword = $helper->getMainCurrentPassword($userId);
+
+        if (!password_verify($currentPassword, $hashedPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Incorrect Current Password, Please Try Again"]);
+            exit;
+        }
+
+        if (password_verify($newPassword, $hashedPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Use Different Password, Old Password Cannot Be Used For New Password"]);
+            exit;
+        }
+
+        $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $response = $postClass->updatePasswordMain($userId, $newHashedPassword);
 
         echo json_encode($response);
         break;
@@ -1821,6 +1877,106 @@ switch ($submitType) {
             "message" => "Your Password Has Been Updated Successfully."
         ]);
         break;
+
+
+    case 'forgotPasswordMain':
+        $email = $_POST['email'] ?? '';
+
+        if (empty($email)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter Email Associated With Your Account"]);
+            exit;
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter A Valid Email Address"]);
+            exit;
+        }
+
+        $checkEmail = $helper->getMainUserByEmail($email);
+
+        if (!$checkEmail) {
+            echo json_encode(["status" => "error", "title" => "Error", "message" => "Email Not Found"]);
+            exit;
+        }
+        $fullName = $checkEmail['first_name'] . ' ' . $checkEmail['last_name'];
+        $username = $checkEmail['username'];
+
+        $token = bin2hex(random_bytes(32));
+
+        $post = new postClass();
+        $post->storeResetToken($email, $token);
+
+        $resetLink = "http://localhost/HungryPaws/reset-password-main?token=$token";
+
+        include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/send-reset-email-main.php';
+        sendResetPasswordEmail($email, $resetLink, $username, $fullName);
+
+        echo json_encode([
+            "status" => "success",
+            "title" => "Success",
+            "message" => "Password Reset Instructions Sent To Your Email."
+        ]);
+        break;
+
+    case 'resetPasswordMain':
+        $token = $_POST['token'] ?? '';
+        $newPassword = $_POST['newPassword'] ?? '';
+        $confirmPassword = $_POST['confirmPassword'] ?? '';
+
+        if (empty($token)) {
+            echo json_encode(["status" => "error", "title" => "Error", "message" => "Invalid Or Missing Token, Please Try To Relogin"]);
+            exit;
+        }
+
+        $resetData = $helper->getResetData($token);
+
+        if (!$resetData) {
+            echo json_encode(["status" => "error", "title" => "Error", "message" => "Invalid Or Expired Reset Link, Please Try To Relogin"]);
+            exit;
+        }
+
+        if (empty($newPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Enter New Password"]);
+            exit;
+        }
+
+        if (empty($confirmPassword)) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Please Confirm New Password"]);
+            exit;
+        }
+
+        if (strlen($newPassword) < 6) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "Password Must Be At Least 6 Characters Long"]);
+            exit;
+        }
+
+        if ($confirmPassword !== $newPassword) {
+            echo json_encode(["status" => "warning", "title" => "Warning!", "message" => "New Password and Confirm Password Does Not Match, Please Try Again"]);
+            exit;
+        }
+
+        $email = $resetData['email'];
+
+        $newHashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        $post = new postClass();
+
+        $updateSuccess = $post->updateMainUserPasswordByEmail($email, $newHashedPassword);
+
+        if (!$updateSuccess) {
+            echo json_encode(["status" => "error", "title" => "Error", "message" => "Failed To Update Password, Please Try Again"]);
+            exit;
+        }
+
+        $post->deleteResetToken($token);
+
+        echo json_encode([
+            "status" => "success",
+            "title" => "Success!",
+            "message" => "Your Password Has Been Updated Successfully."
+        ]);
+        break;
+
 
     default:
         echo json_encode(["status" => "error", "title" => "Error!", "message" => "Invalid Action"]);

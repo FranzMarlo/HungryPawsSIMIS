@@ -61,15 +61,32 @@
                     class="profile-picture profile-picture-as-text bg-body">
                 <div class="profile-info profile-info-no-role" data-lock-name="<?= htmlspecialchars($username) ?>"
                     data-lock-email="<?= htmlspecialchars($email); ?>">
-                    <span class="name"><strong
-                            class="font-weight-semibold"><?= htmlspecialchars($username) ?></strong></span>
+
+                    <span class="name">
+                        <strong class="font-weight-semibold">
+                            <?= htmlspecialchars($username) ?>
+                        </strong>
+                    </span>
+
+                    <div class="branch-role-badge">
+
+                        <span class="badge-dot"></span>
+
+                        <span class="badge-text">
+                            <?= htmlspecialchars($branchName) ?>
+                            •
+                            <?= htmlspecialchars($role) ?>
+                        </span>
+
+                    </div>
+
                 </div>
 
                 <i class="fas fa-chevron-down text-color-dark"></i>
             </a>
 
             <div class="dropdown-menu">
-                <ul class="list-unstyled">
+                <ul class="list-unstyled mt-2">
                     <li>
                         <a role="menuitem" tabindex="-1" href="profile "><i class="bx bx-user"></i> My
                             Profile</a>

@@ -4,6 +4,22 @@
 $title = "Forgot Password | Hungry Paws";
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/login-head.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/fetch-class.php';
+
+$fetch = new fetchClass();
+if (isset($_GET['token']) && !empty($_GET['token'])) {
+    $token = $_GET['token'];
+    $checkToken = $fetch->checkToken($token);
+    if (!$checkToken) {
+        header("Location: /HungryPaws/utility/403");
+        exit;
+    }
+
+} else {
+    header("Location: /HungryPaws/utility/401");
+    exit;
+}
+
 ?>
 
 <body>
@@ -17,30 +33,48 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/login-head.php';
             <div class="panel card-sign">
                 <div class="card-title-sign mt-3 text-end">
                     <h2 class="title text-uppercase font-weight-bold m-0"><i
-                            class="bx bx-user-circle me-1 text-6 position-relative top-5"></i> Forgot Password</h2>
+                            class="bx bx-user-circle me-1 text-6 position-relative top-5"></i> Reset Password</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <h1 class="text-dark text-uppercase">Forgot Password</h1>
+                        <h1 class="text-dark text-uppercase">Reset Password</h1>
                     </div>
                     <div class="alert alert-info">
-                        <p class="m-0">Enter your e-mail below and we will send you reset instructions!</p>
+                        <p class="m-0">Enter your new password and confirm it by re-entering it. Your new password must
+                            be at least 6 characters.</p>
                     </div>
 
-                    <form id="forgotPasswordForm" method="post">
-                        <div class="form-group mb-0">
+                    <form id="resetPasswordForm" method="post" class="mb-4">
+                        <div class="form-group mb-3">
+                            <label>New Password</label>
                             <div class="input-group">
-                                <input name="email" type="text" placeholder="Enter Email"
-                                    class="form-control form-control-md" />
-                                <button class="btn btn-primary btn-lg d-flex align-items-center" type="submit"
-                                    id="resetBtn">
-                                    <span class="btn-text">Reset!</span>
-                                    <span class="spinner-border spinner-border-sm ms-2 d-none" id="resetSpinner"></span>
-                                </button>
+                                <input name="newPassword" id="newPassword" type="password"
+                                    class="form-control form-control-md " placeholder="Enter New Password" />
+                                <span class="input-group-text">
+                                    <i class="bx bx-lock text-4"></i>
+                                </span>
                             </div>
                         </div>
 
-                        <p class="text-center mt-3">Remembered? <a href="login">Log In!</a></p>
+                        <div class="form-group mb-3">
+                            <label>Confirm Password</label>
+                            <div class="input-group">
+                                <input name="confirmPassword" id="confirmPassword" type="password"
+                                    class="form-control form-control-md " placeholder="Confirm Password" />
+                                <span class="input-group-text">
+                                    <i class="bx bx-lock text-4"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
+
+                        <div class="row">
+                            <div class="col-12 text-end">
+                                <button type="submit" class="w-100 btn btn-primary mt-2">Change Password</button>
+                            </div>
+                        </div>
+
                     </form>
                 </div>
             </div>
@@ -77,7 +111,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/includes/login-head.php';
     <!-- Theme Initialization Files -->
     <script src="/HungryPaws/assets/js/theme.init.js"></script>
 
-    <script src="/HungryPaws/assets/js/forgot-password-main.js"></script>
+    <script src="/HungryPaws/assets/js/reset-password-main.js"></script>
 
 </body>
 

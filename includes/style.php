@@ -189,4 +189,141 @@
     .tabs .nav-tabs .nav-link:hover {
         border-top-color: var(--role-color) !important;
     }
+
+    /* Branch + Role Badge */
+    .branch-role-badge {
+
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-top: 4px;
+
+        padding: 5px 12px;
+
+        border-radius: 999px;
+
+        font-size: 11px;
+        font-weight: 600;
+
+        width: fit-content;
+
+        color: var(--role-color);
+
+        background:
+            color-mix(in srgb, var(--role-color) 10%, white);
+
+        border: 1px solid color-mix(in srgb, var(--role-color) 18%, white);
+
+        transition: 0.2s ease;
+    }
+
+    /* Branch indicator */
+    .branch-role-badge .badge-dot {
+
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: var(--branch-color);
+
+        flex-shrink: 0;
+    }
+
+    /* Text */
+    .branch-role-badge .badge-text {
+
+        white-space: nowrap;
+
+        line-height: 1;
+    }
+
+    /* Hover effect */
+    .branch-role-badge:hover {
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Base badge */
+    .branch-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: nowrap;
+        max-width: 100%;
+    }
+
+    /* Prevent text overflow */
+    .branch-role-badge .badge-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .branch-role-badge {
+            margin-top: 4px;
+            font-size: 10px;
+            max-width: 160px;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .header-right {
+            position: relative;
+        }
+
+        #userbox .dropdown-menu {
+            right: 0 !important;
+            left: auto !important;
+            min-width: 180px;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .header .userbox>a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-picture {
+            width: 28px;
+            height: 28px;
+        }
+    }
+
+    #userbox>a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* TEXT (profile-info) stays left */
+    #userbox .profile-info {
+        order: 1;
+    }
+
+    /* IMAGE moves to right */
+    #userbox .profile-picture {
+        order: 2;
+    }
+
+    /* CHEVRON stays last */
+    #userbox .fa-chevron-down {
+        order: 3;
+    }
 </style>

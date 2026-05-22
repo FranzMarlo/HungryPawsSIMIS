@@ -21,6 +21,7 @@ $first_name = $_SESSION['first_name'];
 $last_name = $_SESSION['last_name'];
 $email = $_SESSION['email'];
 $image = $_SESSION['image'];
+$_SESSION['branch_color'] = '#64748B';
 
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/fetch-class.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/HungryPaws/backend/css-helper.php';
