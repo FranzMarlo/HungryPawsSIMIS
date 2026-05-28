@@ -1,0 +1,13 @@
+user_id,branch_id,username,hashed_password,password,role,first_name,last_name,email
+10004,1,sreyes,$2y$10$07kRYWQeu4EiOOuJ6YeM6.becIfLmopLvOQyx88zQxjktkGWnnotG,111111,Cashier,Sofia,Reyes,sofia.reyes@gmail.com
+10005,1,mdelgado,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Marcus,Delgado,marcus.delgado@gmail.com
+10006,2,pnair,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Priya,Nair,priya.nair@gmail.com
+10007,2,ofitz,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Cashier,Owen,Fitzgerald,owen.fitzgerald@gmail.com
+10008,3,ychoi,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Cashier,Yuna,Choi,yuna.choi@gmail.com
+10009,3,ecaldwell,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Ethan,Caldwela,ethan.caldwell@gmail.com
+10010,4,lhassan,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Cashier,Layla,Hassan,layla.hassan@gmail.com
+10011,4,npemberton,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Noah,Pemberton,noah.pemberton@gmail.com
+10012,6,cfontaine,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Cashier,Camille,Fontaine,camille.fontaine@gmail.com
+10013,6,dvargas,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Diego,Vargas,diego.vargas@gmail.com
+10014,5,aosei,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Cashier,Amara,Osei,amara.osei@gmail.com
+10015,5,lthornton,$2y$10$vfdDC71ODt.YrOiY4jXJ5eV72bKiLjR8Jc4ZjmojOcEJSrFHWxgBG,111111,Admin,Liam,Thornton,liam.thornton@gmail.com

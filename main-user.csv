@@ -1,0 +1,3 @@
+user_id,username,hashed_password,password,role,first_name,last_name,email
+10002,manager1,$2y$10$y2fo6wabTxMQZ/k/79vuEObdtI8cy3QTfd31otjxgv5btLgnr6ILO,111111,Manager,James,Hartwell,james.h@gmail.com
+10003,staff1,$2y$10$9odh0z3vym3bUGFIV43f6OzedN74BKYU8QHK8pSXtJKfJcQXkO31e,111111,Inventory Staff,Patricia,Jennifer,patrijen@gmail.com
